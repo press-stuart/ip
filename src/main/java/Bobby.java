@@ -1,10 +1,35 @@
 public class Bobby {
+    /** Number of spaces to add before each horizontal line frame. */
+    private static final int FRAME_INDENTATION = 4;
+
+    /** Number of spaces to add before each line of text in the message. */
+    private static final int TEXT_INDENTATION = 5;
+
+    /** Length of each horizontal line frame. */
+    private static final int FRAME_LENGTH = 67;
+
+    /**
+     * Prints the given message with indentation and horizontal lines above and below the message.
+     */
+    private static void printMessage(String message) {
+        String frameIndent = " ".repeat(FRAME_INDENTATION);
+        String textIndent = " ".repeat(TEXT_INDENTATION);
+        String horizontalLine = "_".repeat(FRAME_LENGTH);
+
+        String[] messageLines = message.split("\n");
+
+        System.out.println(frameIndent + horizontalLine);
+
+        for (String line : messageLines) {
+            System.out.println(textIndent + line);
+        }
+
+        System.out.println(frameIndent + horizontalLine);
+        System.out.println();
+    }
+
     public static void main(String[] args) {
-        System.out.println("____________________________________________________________");
-        System.out.println("Hello! I'm Bobby.");
-        System.out.println("What can I do for you?");
-        System.out.println("____________________________________________________________");
-        System.out.println("Bye! Hope to see you again soon!");
-        System.out.println("____________________________________________________________");
+        printMessage("Hello! I'm Bobby.\nWhat can I do for you?");
+        printMessage("Bye! Hope to see you again soon!");
     }
 }
