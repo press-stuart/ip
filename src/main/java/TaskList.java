@@ -1,0 +1,50 @@
+import java.util.ArrayList;
+import java.util.List;
+
+public class TaskList {
+    private List<Task> tasks;
+
+    /**
+     * Initialises an empty list of tasks.
+     */
+    public TaskList() {
+        this.tasks = new ArrayList<>();
+    }
+
+    /**
+     * Adds a task to the list.
+     */
+    public void addTask(Task task) {
+        tasks.add(task);
+    }
+
+    /**
+     * Deletes the task at the given index from the list.
+     * 
+     * @param index Index of the task, with numbering beginning from 1.
+     * @return The task that is deleted.
+     */
+    public Task deleteTask(int index) {
+        return tasks.remove(index - 1);
+    }
+
+    /**
+     * Outputs the contained tasks, one on each line, with numbering beginning from 1.
+     */
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < tasks.size(); i++) {
+            if (i > 0) {
+                sb.append("\n");
+            }
+
+            Task task = this.tasks.get(i);
+            String line = String.format("%d. %s", i + 1, task.toString());
+            sb.append(line);
+        }
+
+        return sb.toString();
+    }
+}
