@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class Bobby {
     /** Number of spaces to add before each horizontal line frame. */
     private static final int FRAME_INDENTATION = 4;
@@ -29,7 +31,20 @@ public class Bobby {
     }
 
     public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
         printMessage("Hello! I'm Bobby.\nWhat can I do for you?");
+
+        while (true) {
+            String inputLine = sc.nextLine();
+
+            if (inputLine.equalsIgnoreCase("bye")) {
+                break;
+            }
+
+            printMessage(inputLine);
+        }
+
         printMessage("Bye! Hope to see you again soon!");
+        sc.close();
     }
 }
