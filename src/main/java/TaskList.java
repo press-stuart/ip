@@ -29,6 +29,16 @@ public class TaskList {
     }
 
     /**
+     * Gets the task at the given index from the list.
+     * 
+     * @param index Index of the task, with numbering beginning from 1.
+     * @return The task at the given index.
+     */
+    public Task getTask(int index) {
+        return tasks.get(index - 1);
+    }
+
+    /**
      * Outputs the contained tasks, one on each line, with numbering beginning from 1.
      */
     @Override

@@ -41,11 +41,23 @@ public class Bobby {
 
         while (true) {
             String inputLine = sc.nextLine();
+            String[] tokens = inputLine.split("\\s+");
+            String command = tokens[0];
 
             if (inputLine.equalsIgnoreCase("bye")) {
                 break;
             } else if (inputLine.equalsIgnoreCase("list")) {
                 printMessage(taskList.toString());
+            } else if (command.equalsIgnoreCase("mark")) {
+                int taskIndex = Integer.valueOf(tokens[1]);
+                Task task = taskList.getTask(taskIndex);
+                task.markDone();
+                printMessage("Marked this task as done:\n  " + task);
+            } else if (command.equalsIgnoreCase("unmark")) {
+                int taskIndex = Integer.valueOf(tokens[1]);
+                Task task = taskList.getTask(taskIndex);
+                task.unmarkDone();
+                printMessage("Marked this task as not done:\n  " + task);
             } else {
                 Task task = new Task(inputLine);
                 taskList.addTask(task);
