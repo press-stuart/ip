@@ -14,6 +14,9 @@ public class Bobby {
     /** List of user tasks. */
     private static TaskList taskList;
 
+    /** Indicates whether the user finished interaction. */
+    private static boolean isFinished;
+
     /**
      * Prints the given message with indentation and horizontal lines above and below the message.
      */
@@ -82,55 +85,84 @@ public class Bobby {
         return components;
     }
 
+    private static void runByeCommand() {
+        isFinished = true;
+    }
+
+    private static void runListCommand() {
+        printMessage("Tasks in your list:\n" + taskList.toString());
+    }
+
+    private static void runMarkCommand(HashMap<String, String> inputParts) {
+        int taskIndex = Integer.valueOf(inputParts.get("value"));
+        Task task = taskList.getTask(taskIndex);
+        task.markDone();
+        printMessage("Marked this task as done:\n  " + task);
+    }
+
+    private static void runUnmarkCommand(HashMap<String, String> inputParts) {
+        int taskIndex = Integer.valueOf(inputParts.get("value"));
+        Task task = taskList.getTask(taskIndex);
+        task.unmarkDone();
+        printMessage("Marked this task as not done:\n  " + task);
+    }
+
+    private static void runTodoCommand(HashMap<String, String> inputParts) {
+        String description = inputParts.get("value");
+        Todo todo = new Todo(description);
+        taskList.addTask(todo);
+        printMessage(String.format(
+                "Added this task:\n  %s\nNow you have %d tasks in the list.",
+                todo.toString(), taskList.getSize()));
+    }
+
+    private static void runDeadlineCommand(HashMap<String, String> inputParts) {
+        String description = inputParts.get("value");
+        String by = inputParts.get("by");
+        Deadline deadline = new Deadline(description, by);
+        taskList.addTask(deadline);
+        printMessage(String.format(
+                "Added this task:\n  %s\nNow you have %d tasks in the list.",
+                deadline.toString(), taskList.getSize()));
+    }
+
+    private static void runEventCommand(HashMap<String, String> inputParts) {
+        String description = inputParts.get("value");
+        String from = inputParts.get("from");
+        String to = inputParts.get("to");
+        Event event = new Event(description, from, to);
+        taskList.addTask(event);
+        printMessage(String.format(
+                "Added this task:\n  %s\nNow you have %d tasks in the list.",
+                event.toString(), taskList.getSize()));
+    }
+
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         taskList = new TaskList();
+        isFinished = false;
 
         printMessage("Hello! I'm Bobby.\nWhat can I do for you?");
 
-        while (true) {
+        while (!isFinished) {
             String inputLine = sc.nextLine();
             HashMap<String, String> inputParts = parse(inputLine);
             String command = inputParts.get("command");
 
             if (command.equalsIgnoreCase("bye")) {
-                break;
+                runByeCommand();
             } else if (command.equalsIgnoreCase("list")) {
-                printMessage("Tasks in your list:\n" + taskList.toString());
+                runListCommand();
             } else if (command.equalsIgnoreCase("mark")) {
-                int taskIndex = Integer.valueOf(inputParts.get("value"));
-                Task task = taskList.getTask(taskIndex);
-                task.markDone();
-                printMessage("Marked this task as done:\n  " + task);
+                runMarkCommand(inputParts);
             } else if (command.equalsIgnoreCase("unmark")) {
-                int taskIndex = Integer.valueOf(inputParts.get("value"));
-                Task task = taskList.getTask(taskIndex);
-                task.unmarkDone();
-                printMessage("Marked this task as not done:\n  " + task);
+                runUnmarkCommand(inputParts);
             } else if (command.equalsIgnoreCase("todo")) {
-                String description = inputParts.get("value");
-                Todo todo = new Todo(description);
-                taskList.addTask(todo);
-                printMessage(String.format(
-                        "Added this task:\n  %s\nNow you have %d tasks in the list.",
-                        todo.toString(), taskList.getSize()));
+                runTodoCommand(inputParts);
             } else if (command.equalsIgnoreCase("deadline")) {
-                String description = inputParts.get("value");
-                String by = inputParts.get("by");
-                Deadline deadline = new Deadline(description, by);
-                taskList.addTask(deadline);
-                printMessage(String.format(
-                        "Added this task:\n  %s\nNow you have %d tasks in the list.",
-                        deadline.toString(), taskList.getSize()));
+                runDeadlineCommand(inputParts);
             } else if (command.equalsIgnoreCase("event")) {
-                String description = inputParts.get("value");
-                String from = inputParts.get("from");
-                String to = inputParts.get("to");
-                Event event = new Event(description, from, to);
-                taskList.addTask(event);
-                printMessage(String.format(
-                        "Added this task:\n  %s\nNow you have %d tasks in the list.",
-                        event.toString(), taskList.getSize()));
+                runEventCommand(inputParts);
             }
             
             // TODO: handle invalid command
