@@ -90,28 +90,50 @@ public class Bobby {
 
         while (true) {
             String inputLine = sc.nextLine();
-            String[] tokens = inputLine.split("\\s+");
-            String command = tokens[0];
+            HashMap<String, String> inputParts = parse(inputLine);
+            String command = inputParts.get("command");
 
-            if (inputLine.equalsIgnoreCase("bye")) {
+            if (command.equalsIgnoreCase("bye")) {
                 break;
-            } else if (inputLine.equalsIgnoreCase("list")) {
-                printMessage(taskList.toString());
+            } else if (command.equalsIgnoreCase("list")) {
+                printMessage("Tasks in your list:\n" + taskList.toString());
             } else if (command.equalsIgnoreCase("mark")) {
-                int taskIndex = Integer.valueOf(tokens[1]);
+                int taskIndex = Integer.valueOf(inputParts.get("value"));
                 Task task = taskList.getTask(taskIndex);
                 task.markDone();
                 printMessage("Marked this task as done:\n  " + task);
             } else if (command.equalsIgnoreCase("unmark")) {
-                int taskIndex = Integer.valueOf(tokens[1]);
+                int taskIndex = Integer.valueOf(inputParts.get("value"));
                 Task task = taskList.getTask(taskIndex);
                 task.unmarkDone();
                 printMessage("Marked this task as not done:\n  " + task);
-            } else {
-                Task task = new Task(inputLine);
-                taskList.addTask(task);
-                printMessage("added: " + inputLine);
+            } else if (command.equalsIgnoreCase("todo")) {
+                String description = inputParts.get("value");
+                Todo todo = new Todo(description);
+                taskList.addTask(todo);
+                printMessage(String.format(
+                        "Added this task:\n  %s\nNow you have %d tasks in the list.",
+                        todo.toString(), taskList.getSize()));
+            } else if (command.equalsIgnoreCase("deadline")) {
+                String description = inputParts.get("value");
+                String by = inputParts.get("by");
+                Deadline deadline = new Deadline(description, by);
+                taskList.addTask(deadline);
+                printMessage(String.format(
+                        "Added this task:\n  %s\nNow you have %d tasks in the list.",
+                        deadline.toString(), taskList.getSize()));
+            } else if (command.equalsIgnoreCase("event")) {
+                String description = inputParts.get("value");
+                String from = inputParts.get("from");
+                String to = inputParts.get("to");
+                Event event = new Event(description, from, to);
+                taskList.addTask(event);
+                printMessage(String.format(
+                        "Added this task:\n  %s\nNow you have %d tasks in the list.",
+                        event.toString(), taskList.getSize()));
             }
+            
+            // TODO: handle invalid command
         }
 
         printMessage("Bye! Hope to see you again soon!");

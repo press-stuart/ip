@@ -39,6 +39,15 @@ public class TaskList {
     }
 
     /**
+     * Gets the number of tasks in the list.
+     * 
+     * @return The number of tasks in the list.
+     */
+    public int getSize() {
+        return tasks.size();
+    }
+
+    /**
      * Outputs the contained tasks, one on each line, with numbering beginning from 1.
      */
     @Override
