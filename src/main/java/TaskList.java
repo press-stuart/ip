@@ -60,7 +60,7 @@ public class TaskList {
             }
 
             Task task = this.tasks.get(i);
-            String line = String.format("%d. %s", i + 1, task.toString());
+            String line = String.format("%d.%s", i + 1, task.toString());
             sb.append(line);
         }
 
