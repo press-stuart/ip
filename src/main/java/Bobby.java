@@ -115,6 +115,14 @@ public class Bobby {
         printMessage("Marked this task as not done:\n  " + task);
     }
 
+    private static void runDeleteCommand(HashMap<String, String> inputParts) {
+        int taskIndex = Integer.valueOf(inputParts.get("value"));
+        Task deletedTask = taskList.deleteTask(taskIndex);
+        printMessage(String.format(
+                "Deleted this task:\n  %s\nNow you have %d tasks in the list.",
+                deletedTask.toString(), taskList.getSize()));
+    }
+
     private static void runTodoCommand(HashMap<String, String> inputParts)
             throws DukeException {
         String description = inputParts.get("value");
@@ -197,6 +205,8 @@ public class Bobby {
                     runMarkCommand(inputParts);
                 } else if (command.equalsIgnoreCase("unmark")) {
                     runUnmarkCommand(inputParts);
+                } else if (command.equalsIgnoreCase("delete")) {
+                    runDeleteCommand(inputParts);
                 } else if (command.equalsIgnoreCase("todo")) {
                     runTodoCommand(inputParts);
                 } else if (command.equalsIgnoreCase("deadline")) {
