@@ -50,12 +50,12 @@ public class Bobby {
      * @param line String containing a line of user input.
      * @return A HashMap
      */
-    private static HashMap<String, String> parse(String line) {
+    private static HashMap<String, String> parse(String line) throws DukeException {
         HashMap<String, String> components = new HashMap<>();
 
         if (line == null || line.isBlank()) {
-            // TODO: exception handling
-            return components;
+            throw new DukeException("Did you say something?\n"
+                    + "(Hint: Input cannot be blank)");
         }
 
         // Split by one or more whitespace characters followed by '/'
@@ -64,7 +64,11 @@ public class Bobby {
         String commandValueSection = sections[0];
         String[] commandValueTokens = commandValueSection.split("\\s+", 2);
 
-        // TODO: exception handling
+        if (commandValueTokens.length == 0) {
+            throw new DukeException("I don't know what that means :(\n"
+                    + "(Hint: Use one of the recognised commands)");
+        }
+
         String command = commandValueTokens[0];
         components.put("command", command);
 
@@ -76,7 +80,11 @@ public class Bobby {
             String parameterSection = sections[i];
             String[] parts = parameterSection.split("\\s+", 2);
 
-            // TODO: exception handling
+            if (parts.length == 0 || parts[0].isBlank()) {
+                throw new DukeException("I couldn't find a parameter name :(\n"
+                        + "(Hint: Don't leave a space after the '/')");
+            }
+
             String parameterName = parts[0];
             String parameterValue = parts.length < 2 ? "" : parts[1];
             components.put(parameterName, parameterValue);
@@ -107,8 +115,13 @@ public class Bobby {
         printMessage("Marked this task as not done:\n  " + task);
     }
 
-    private static void runTodoCommand(HashMap<String, String> inputParts) {
+    private static void runTodoCommand(HashMap<String, String> inputParts)
+            throws DukeException {
         String description = inputParts.get("value");
+        if (description == null || description.isEmpty()) {
+            throw new DukeException("The description of a todo cannot be empty!");
+        }
+
         Todo todo = new Todo(description);
         taskList.addTask(todo);
         printMessage(String.format(
@@ -116,9 +129,19 @@ public class Bobby {
                 todo.toString(), taskList.getSize()));
     }
 
-    private static void runDeadlineCommand(HashMap<String, String> inputParts) {
+    private static void runDeadlineCommand(HashMap<String, String> inputParts)
+            throws DukeException {
         String description = inputParts.get("value");
+        if (description == null || description.isEmpty()) {
+            throw new DukeException("The description of a deadline cannot be empty!");
+        }
+
         String by = inputParts.get("by");
+        if (by == null || by.isEmpty()) {
+            throw new DukeException("I couldn't find the deadline!\n"
+                    + "(Hint: Use the /by parameter)");
+        }
+
         Deadline deadline = new Deadline(description, by);
         taskList.addTask(deadline);
         printMessage(String.format(
@@ -126,10 +149,25 @@ public class Bobby {
                 deadline.toString(), taskList.getSize()));
     }
 
-    private static void runEventCommand(HashMap<String, String> inputParts) {
+    private static void runEventCommand(HashMap<String, String> inputParts)
+            throws DukeException {
         String description = inputParts.get("value");
+        if (description == null || description.isEmpty()) {
+            throw new DukeException("The description of an event cannot be empty!");
+        }
+
         String from = inputParts.get("from");
+        if (from == null || from.isEmpty()) {
+            throw new DukeException("I couldn't find the start time!\n"
+                    + "(Hint: Use the /from parameter)");
+        }
+
         String to = inputParts.get("to");
+        if (to == null || to.isEmpty()) {
+            throw new DukeException("I couldn't find the end time!\n"
+                    + "(Hint: Use the /to parameter)");
+        }
+
         Event event = new Event(description, from, to);
         taskList.addTask(event);
         printMessage(String.format(
@@ -146,26 +184,32 @@ public class Bobby {
 
         while (!isFinished) {
             String inputLine = sc.nextLine();
-            HashMap<String, String> inputParts = parse(inputLine);
-            String command = inputParts.get("command");
 
-            if (command.equalsIgnoreCase("bye")) {
-                runByeCommand();
-            } else if (command.equalsIgnoreCase("list")) {
-                runListCommand();
-            } else if (command.equalsIgnoreCase("mark")) {
-                runMarkCommand(inputParts);
-            } else if (command.equalsIgnoreCase("unmark")) {
-                runUnmarkCommand(inputParts);
-            } else if (command.equalsIgnoreCase("todo")) {
-                runTodoCommand(inputParts);
-            } else if (command.equalsIgnoreCase("deadline")) {
-                runDeadlineCommand(inputParts);
-            } else if (command.equalsIgnoreCase("event")) {
-                runEventCommand(inputParts);
+            try {
+                HashMap<String, String> inputParts = parse(inputLine);
+                String command = inputParts.get("command");
+
+                if (command.equalsIgnoreCase("bye")) {
+                    runByeCommand();
+                } else if (command.equalsIgnoreCase("list")) {
+                    runListCommand();
+                } else if (command.equalsIgnoreCase("mark")) {
+                    runMarkCommand(inputParts);
+                } else if (command.equalsIgnoreCase("unmark")) {
+                    runUnmarkCommand(inputParts);
+                } else if (command.equalsIgnoreCase("todo")) {
+                    runTodoCommand(inputParts);
+                } else if (command.equalsIgnoreCase("deadline")) {
+                    runDeadlineCommand(inputParts);
+                } else if (command.equalsIgnoreCase("event")) {
+                    runEventCommand(inputParts);
+                } else {
+                    throw new DukeException("I don't know what that means :(\n"
+                            + "(Hint: Use one of the recognised commands)");
+                }
+            } catch (Exception e) {
+                printMessage(e.getMessage());
             }
-            
-            // TODO: handle invalid command
         }
 
         printMessage("Bye! Hope to see you again soon!");
