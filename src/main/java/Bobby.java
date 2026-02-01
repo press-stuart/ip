@@ -17,6 +17,9 @@ public class Bobby {
     /** List of user tasks. */
     private TaskList taskList;
 
+    /** Manager for the file storing the list of tasks. */
+    private Storage storage;
+
     public static void main(String[] args) {
         Bobby bobby = new Bobby();
         bobby.runLoopUntilExit();
@@ -25,7 +28,13 @@ public class Bobby {
 
     public Bobby() {
         sc = new Scanner(System.in);
-        taskList = new TaskList();
+        storage = new Storage();
+        try {
+            taskList = storage.load();
+        } catch (Exception e) {
+            printMessage(e.getMessage());
+            taskList = new TaskList();
+        }
     }
 
     /**
@@ -72,6 +81,12 @@ public class Bobby {
     }
 
     private void cleanUpAfterExit() {
+        try {
+            storage.save(taskList);
+        } catch (Exception e) {
+            printMessage(e.getMessage());
+        }
+        
         sc.close();
     }
 
@@ -127,7 +142,8 @@ public class Bobby {
             throw new DukeException("The description of a todo cannot be empty!");
         }
 
-        Todo todo = new Todo(description);
+        boolean isDone = inputParts.containsKey("done");
+        Todo todo = new Todo(description, isDone);
         taskList.addTask(todo);
         printMessage(String.format(
                 "Added this task:\n  %s\nNow you have %d tasks in the list.",
@@ -146,7 +162,8 @@ public class Bobby {
                     + "(Hint: Use the /by parameter)");
         }
 
-        Deadline deadline = new Deadline(description, by);
+        boolean isDone = inputParts.containsKey("done");
+        Deadline deadline = new Deadline(description, isDone, by);
         taskList.addTask(deadline);
         printMessage(String.format(
                 "Added this task:\n  %s\nNow you have %d tasks in the list.",
@@ -171,7 +188,8 @@ public class Bobby {
                     + "(Hint: Use the /to parameter)");
         }
 
-        Event event = new Event(description, from, to);
+        boolean isDone = inputParts.containsKey("done");
+        Event event = new Event(description, isDone, from, to);
         taskList.addTask(event);
         printMessage(String.format(
                 "Added this task:\n  %s\nNow you have %d tasks in the list.",
