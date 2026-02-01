@@ -2,6 +2,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -41,7 +43,6 @@ public class Storage {
             List<String> lines = Files.readAllLines(path);
             
             for (String line : lines) {
-                // TODO: eliminate code duplication
                 HashMap<String, String> inputParts = Parser.parse(line);
                 String command = inputParts.get("command");
 
@@ -103,8 +104,17 @@ public class Storage {
                     + "(Hint: Use the /by parameter)");
         }
 
+        LocalDate byDate;
+
+        try {
+            byDate = LocalDate.parse(by);
+        } catch (DateTimeParseException e) {
+            throw new DukeException("I don't understand this date format!\n"
+                    + "(Hint: Use the yyyy-mm-dd format)");
+        }
+
         boolean isDone = inputParts.containsKey("done");
-        Deadline deadline = new Deadline(description, isDone, by);
+        Deadline deadline = new Deadline(description, isDone, byDate);
         taskList.addTask(deadline);
     }
 
@@ -127,8 +137,19 @@ public class Storage {
                     + "(Hint: Use the /to parameter)");
         }
 
+        LocalDate fromDate;
+        LocalDate toDate;
+
+        try {
+            fromDate = LocalDate.parse(from);
+            toDate = LocalDate.parse(to);
+        } catch (Exception e) {
+            throw new DukeException("I don't understand this date format!\n"
+                    + "(Hint: Use the yyyy-mm-dd format)");
+        }
+
         boolean isDone = inputParts.containsKey("done");
-        Event event = new Event(description, isDone, from, to);
+        Event event = new Event(description, isDone, fromDate, toDate);
         taskList.addTask(event);
     }
 }
