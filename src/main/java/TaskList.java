@@ -39,6 +39,13 @@ public class TaskList {
     }
 
     /**
+     * Gets a List containing all tasks.
+     */
+    public List<Task> getAllTasks() {
+        return tasks;
+    }
+
+    /**
      * Gets the number of tasks in the list.
      * 
      * @return The number of tasks in the list.

@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -47,6 +48,16 @@ public class Storage {
             return taskList;
         } catch (Exception e) {
             throw new DukeException("Error: Could not load file :(");
+        }
+    }
+
+    public void save(TaskList taskList) throws DukeException {
+        try {
+            List<String> lines = new ArrayList<>();
+            taskList.getAllTasks().forEach(task -> lines.add(task.toCommand()));
+            Files.write(path, lines);
+        } catch (Exception e) {
+            throw new DukeException("Error: Could not save data to file :(");
         }
     }
 
