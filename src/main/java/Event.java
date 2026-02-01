@@ -1,14 +1,17 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 /**
  * Represents an Event.
  */
 public class Event extends Task {
-    /** Start time of the event. */
-    protected String from;
+    protected static final DateTimeFormatter PRINT_FORMAT = DateTimeFormatter.ofPattern("d MMM yyyy");
+    protected static final DateTimeFormatter COMMAND_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    /** End time of the event. */
-    protected String to;
+    protected LocalDate from;
+    protected LocalDate to;
     
-    public Event(String description, boolean isDone, String from, String to) {
+    public Event(String description, boolean isDone, LocalDate from, LocalDate to) {
         super(description, isDone);
         this.from = from;
         this.to = to;
@@ -16,12 +19,16 @@ public class Event extends Task {
 
     @Override
     public String toCommand() {
-        return String.format("event %s /from %s /to %s", description, from, to)
+        String f = from.format(COMMAND_FORMAT);
+        String t = to.format(COMMAND_FORMAT);
+        return String.format("event %s /from %s /to %s", description, f, t)
                 + (isDone ? " /done" : "");
     }
 
     @Override
     public String toString() {
-        return String.format("[E]%s (from: %s to: %s)", super.toString(), from, to);
+        String f = from.format(PRINT_FORMAT);
+        String t = to.format(PRINT_FORMAT);
+        return String.format("[E]%s (from: %s to: %s)", super.toString(), f, t);
     }
 }
