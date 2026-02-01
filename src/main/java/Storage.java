@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Manager for the file storing the list of tasks.
+ */
 public class Storage {
     /** Path of the file storing the list of tasks. */
     public static final String STORAGE_PATH = "tasks.txt";
@@ -16,6 +19,14 @@ public class Storage {
         path = Paths.get(STORAGE_PATH);
     }
     
+    /**
+     * Loads the contents of the file storing the list of Tasks into a TaskList.
+     * 
+     * If no file exists, a new file is created and an empty TaskList is returned.
+     * 
+     * @return A TaskList containing all Tasks stored in the file.
+     * @throws DukeException
+     */
     public TaskList load() throws DukeException {
         if (!Files.exists(path)) {
             try {
@@ -51,6 +62,12 @@ public class Storage {
         }
     }
 
+    /**
+     * Retrieves the Tasks in the given TaskList instance and saves them in the file.
+     * 
+     * @param taskList List of tasks.
+     * @throws DukeException
+     */
     public void save(TaskList taskList) throws DukeException {
         try {
             List<String> lines = new ArrayList<>();
