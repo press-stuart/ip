@@ -1,3 +1,6 @@
+/**
+ * Represents a Task.
+ */
 public abstract class Task {
     protected String description;
     protected boolean isDone;
@@ -7,22 +10,34 @@ public abstract class Task {
         this.isDone = false;
     }
 
+    /**
+     * Marks the task as done.
+     */
     public void markDone() {
-        this.isDone = true;
+        isDone = true;
     }
 
+    /**
+     * Marks the task as not done.
+     */
     public void unmarkDone() {
-        this.isDone = false;
+        isDone = false;
     }
 
+    /**
+     * Returns the task's status icon depending on whether the task is done.
+     */
     public String getStatusIcon() {
         return (isDone ? "X" : " ");
     }
 
+    /**
+     * Returns a user command that produces this task.
+     */
     public abstract String toCommand();
 
     @Override
     public String toString() {
-        return String.format("[%s] %s", this.getStatusIcon(), this.description);
+        return String.format("[%s] %s", getStatusIcon(), description);
     }
 }

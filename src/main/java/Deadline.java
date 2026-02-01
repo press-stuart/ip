@@ -1,5 +1,8 @@
+/**
+ * Represents a Deadline.
+ */
 public class Deadline extends Task {
-
+    /** Deadline time. */
     protected String by;
     
     public Deadline(String description, String by) {
@@ -9,7 +12,7 @@ public class Deadline extends Task {
 
     @Override
     public String toCommand() {
-        return String.format("deadline %s /by %s", this.description, this.by);
+        return String.format("deadline %s /by %s", description, by);
     }
 
     @Override
