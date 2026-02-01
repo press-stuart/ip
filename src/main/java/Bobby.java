@@ -127,7 +127,8 @@ public class Bobby {
             throw new DukeException("The description of a todo cannot be empty!");
         }
 
-        Todo todo = new Todo(description);
+        boolean isDone = inputParts.containsKey("done");
+        Todo todo = new Todo(description, isDone);
         taskList.addTask(todo);
         printMessage(String.format(
                 "Added this task:\n  %s\nNow you have %d tasks in the list.",
@@ -146,7 +147,8 @@ public class Bobby {
                     + "(Hint: Use the /by parameter)");
         }
 
-        Deadline deadline = new Deadline(description, by);
+        boolean isDone = inputParts.containsKey("done");
+        Deadline deadline = new Deadline(description, isDone, by);
         taskList.addTask(deadline);
         printMessage(String.format(
                 "Added this task:\n  %s\nNow you have %d tasks in the list.",
@@ -171,7 +173,8 @@ public class Bobby {
                     + "(Hint: Use the /to parameter)");
         }
 
-        Event event = new Event(description, from, to);
+        boolean isDone = inputParts.containsKey("done");
+        Event event = new Event(description, isDone, from, to);
         taskList.addTask(event);
         printMessage(String.format(
                 "Added this task:\n  %s\nNow you have %d tasks in the list.",
