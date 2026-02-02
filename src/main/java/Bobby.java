@@ -1,26 +1,16 @@
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.HashMap;
-import java.util.Scanner;
 
 public class Bobby {
-    /** Number of spaces to add before each horizontal line frame. */
-    private static final int FRAME_INDENTATION = 4;
-
-    /** Number of spaces to add before each line of text in the message. */
-    private static final int TEXT_INDENTATION = 5;
-
-    /** Length of each horizontal line frame. */
-    private static final int FRAME_LENGTH = 67;
-
-    /** Scanner to read user input. */
-    private Scanner sc;
-
     /** List of user tasks. */
     private TaskList taskList;
 
     /** Manager for the file storing the list of tasks. */
     private Storage storage;
+
+    /** User interface. */
+    private Ui ui;
 
     public static void main(String[] args) {
         Bobby bobby = new Bobby();
@@ -29,12 +19,12 @@ public class Bobby {
     }
 
     public Bobby() {
-        sc = new Scanner(System.in);
+        ui = new Ui();
         storage = new Storage();
         try {
             taskList = storage.load();
         } catch (Exception e) {
-            printMessage(e.getMessage());
+            ui.printMessage(e.getMessage());
             taskList = new TaskList();
         }
     }
@@ -45,10 +35,10 @@ public class Bobby {
     public void runLoopUntilExit() {
         boolean isFinished = false;
 
-        printMessage("Hello! I'm Bobby.\nWhat can I do for you?");
+        ui.printMessage("Hello! I'm Bobby.\nWhat can I do for you?");
 
         while (!isFinished) {
-            String inputLine = sc.nextLine();
+            String inputLine = ui.readCommand();
 
             try {
                 HashMap<String, String> inputParts = Parser.parse(inputLine);
@@ -75,65 +65,45 @@ public class Bobby {
                             + "(Hint: Use one of the recognised commands)");
                 }
             } catch (Exception e) {
-                printMessage(e.getMessage());
+                ui.printMessage(e.getMessage());
             }
         }
 
-        printMessage("Bye! Hope to see you again soon!");
+        ui.printMessage("Bye! Hope to see you again soon!");
     }
 
     private void cleanUpAfterExit() {
         try {
             storage.save(taskList);
         } catch (Exception e) {
-            printMessage(e.getMessage());
+            ui.printMessage(e.getMessage());
         }
         
-        sc.close();
-    }
-
-    /**
-     * Prints the given message with indentation and horizontal lines above and below the message.
-     */
-    private static void printMessage(String message) {
-        String frameIndent = " ".repeat(FRAME_INDENTATION);
-        String textIndent = " ".repeat(TEXT_INDENTATION);
-        String horizontalLine = "_".repeat(FRAME_LENGTH);
-
-        String[] messageLines = message.split("\n");
-
-        System.out.println(frameIndent + horizontalLine);
-
-        for (String line : messageLines) {
-            System.out.println(textIndent + line);
-        }
-
-        System.out.println(frameIndent + horizontalLine);
-        System.out.println();
+        ui.close();
     }
 
     private void runListCommand() {
-        printMessage("Tasks in your list:\n" + taskList.toString());
+        ui.printMessage("Tasks in your list:\n" + taskList.toString());
     }
 
     private void runMarkCommand(HashMap<String, String> inputParts) {
         int taskIndex = Integer.valueOf(inputParts.get("value"));
         Task task = taskList.getTask(taskIndex);
         task.markDone();
-        printMessage("Marked this task as done:\n  " + task);
+        ui.printMessage("Marked this task as done:\n  " + task);
     }
 
     private void runUnmarkCommand(HashMap<String, String> inputParts) {
         int taskIndex = Integer.valueOf(inputParts.get("value"));
         Task task = taskList.getTask(taskIndex);
         task.unmarkDone();
-        printMessage("Marked this task as not done:\n  " + task);
+        ui.printMessage("Marked this task as not done:\n  " + task);
     }
 
     private void runDeleteCommand(HashMap<String, String> inputParts) {
         int taskIndex = Integer.valueOf(inputParts.get("value"));
         Task deletedTask = taskList.deleteTask(taskIndex);
-        printMessage(String.format(
+        ui.printMessage(String.format(
                 "Deleted this task:\n  %s\nNow you have %d tasks in the list.",
                 deletedTask.toString(), taskList.getSize()));
     }
@@ -147,7 +117,7 @@ public class Bobby {
         boolean isDone = inputParts.containsKey("done");
         Todo todo = new Todo(description, isDone);
         taskList.addTask(todo);
-        printMessage(String.format(
+        ui.printMessage(String.format(
                 "Added this task:\n  %s\nNow you have %d tasks in the list.",
                 todo.toString(), taskList.getSize()));
     }
@@ -176,7 +146,7 @@ public class Bobby {
         boolean isDone = inputParts.containsKey("done");
         Deadline deadline = new Deadline(description, isDone, byDate);
         taskList.addTask(deadline);
-        printMessage(String.format(
+        ui.printMessage(String.format(
                 "Added this task:\n  %s\nNow you have %d tasks in the list.",
                 deadline.toString(), taskList.getSize()));
     }
@@ -213,7 +183,7 @@ public class Bobby {
         boolean isDone = inputParts.containsKey("done");
         Event event = new Event(description, isDone, fromDate, toDate);
         taskList.addTask(event);
-        printMessage(String.format(
+        ui.printMessage(String.format(
                 "Added this task:\n  %s\nNow you have %d tasks in the list.",
                 event.toString(), taskList.getSize()));
     }
