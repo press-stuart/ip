@@ -72,6 +72,8 @@ public class Bobby {
                     runDeadlineCommand(inputParts);
                 } else if (command.equalsIgnoreCase("event")) {
                     runEventCommand(inputParts);
+                } else if (command.equalsIgnoreCase("find")) {
+                    runFindCommand(inputParts);
                 } else {
                     throw new BobbyException("I don't know what that means :(\n"
                             + "(Hint: Use one of the recognised commands)");
@@ -198,5 +200,15 @@ public class Bobby {
         ui.printMessage(String.format(
                 "Added this task:\n  %s\nNow you have %d tasks in the list.",
                 event.toString(), taskList.getSize()));
+    }
+
+    private void runFindCommand(HashMap<String, String> inputParts) throws BobbyException {
+        String keyword = inputParts.get("value");
+        if (keyword == null || keyword.isEmpty()) {
+            throw new BobbyException("The keyword for finding tasks cannot be empty!");
+        }
+
+        TaskList foundTasks = taskList.findTasks(keyword);
+        ui.printMessage("Here are the matching tasks in your list:\n" + foundTasks.toString());
     }
 }
