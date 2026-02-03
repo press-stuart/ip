@@ -3,6 +3,9 @@ package bobby.task;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A container of user tasks.
+ */
 public class TaskList {
     private List<Task> tasks;
 

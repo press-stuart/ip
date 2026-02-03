@@ -35,11 +35,11 @@ public class Storage {
     
     /**
      * Loads the contents of the file storing the list of Tasks into a TaskList.
-     * 
      * If no file exists, a new file is created and an empty TaskList is returned.
      * 
      * @return A TaskList containing all Tasks stored in the file.
-     * @throws BobbyException
+     * @throws BobbyException If the file did not exist and could not be created,
+     * or if an error occurred while reading the file.
      */
     public TaskList load() throws BobbyException {
         if (!Files.exists(path)) {
@@ -79,7 +79,7 @@ public class Storage {
      * Retrieves the Tasks in the given TaskList instance and saves them in the file.
      * 
      * @param taskList List of tasks.
-     * @throws BobbyException
+     * @throws BobbyException If an error occurs while writing to the file.
      */
     public void save(TaskList taskList) throws BobbyException {
         try {

@@ -4,19 +4,22 @@ import java.util.HashMap;
 
 import bobby.exception.BobbyException;
 
+/**
+ * Parser for user input.
+ */
 public class Parser {
     /**
      * Parses a line of user input to extract the command, value and parameters.
-     * 
      * The command is the first word, using whitespace characters as delimiters. The value is the
      * text between the command and the first parameter, or the end of the string if no parameters
      * exist.
-     * 
      * Forward slashes `/` define the beginnings of parameters. After removing the forward slash,
      * the first word is the parameter name. All remaining text forms the parameter value.
      * 
      * @param line String containing a line of user input.
      * @return A HashMap with keys "command", "value" and parameter names
+     * @throws BobbyException If the input is blank (whitespace only), the command is not
+     * recognized, or a parameter name is missing.
      */
     public static HashMap<String, String> parse(String line) throws BobbyException {
         HashMap<String, String> components = new HashMap<>();
