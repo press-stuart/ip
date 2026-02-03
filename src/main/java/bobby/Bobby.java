@@ -14,6 +14,10 @@ import bobby.task.TaskList;
 import bobby.task.Todo;
 import bobby.ui.Ui;
 
+/**
+ * Main class for Bobby the chatbot. Drives the initialization, user command loop
+ * and cleanup on exit.
+ */
 public class Bobby {
     /** List of user tasks. */
     private TaskList taskList;
@@ -30,6 +34,9 @@ public class Bobby {
         bobby.cleanUpAfterExit();
     }
 
+    /**
+     * Initializes Bobby, loading tasks from storage if available.
+     */
     public Bobby() {
         ui = new Ui();
         storage = new Storage();
@@ -84,6 +91,9 @@ public class Bobby {
         ui.printMessage("Bye! Hope to see you again soon!");
     }
 
+    /**
+     * Attempts to save tasks to storage and closes the UI.
+     */
     private void cleanUpAfterExit() {
         try {
             storage.save(taskList);
