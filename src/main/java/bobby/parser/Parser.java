@@ -2,7 +2,7 @@ package bobby.parser;
 
 import java.util.HashMap;
 
-import bobby.exception.DukeException;
+import bobby.exception.BobbyException;
 
 public class Parser {
     /**
@@ -18,11 +18,11 @@ public class Parser {
      * @param line String containing a line of user input.
      * @return A HashMap with keys "command", "value" and parameter names
      */
-    public static HashMap<String, String> parse(String line) throws DukeException {
+    public static HashMap<String, String> parse(String line) throws BobbyException {
         HashMap<String, String> components = new HashMap<>();
 
         if (line == null || line.isBlank()) {
-            throw new DukeException("Did you say something?\n"
+            throw new BobbyException("Did you say something?\n"
                     + "(Hint: Input cannot be blank)");
         }
 
@@ -33,7 +33,7 @@ public class Parser {
         String[] commandValueTokens = commandValueSection.split("\\s+", 2);
 
         if (commandValueTokens.length == 0) {
-            throw new DukeException("I don't know what that means :(\n"
+            throw new BobbyException("I don't know what that means :(\n"
                     + "(Hint: Use one of the recognised commands)");
         }
 
@@ -49,7 +49,7 @@ public class Parser {
             String[] parts = parameterSection.split("\\s+", 2);
 
             if (parts.length == 0 || parts[0].isBlank()) {
-                throw new DukeException("I couldn't find a parameter name :(\n"
+                throw new BobbyException("I couldn't find a parameter name :(\n"
                         + "(Hint: Don't leave a space after the '/')");
             }
 

@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import bobby.exception.DukeException;
+import bobby.exception.BobbyException;
 import bobby.parser.Parser;
 import bobby.task.Deadline;
 import bobby.task.Event;
@@ -39,14 +39,14 @@ public class Storage {
      * If no file exists, a new file is created and an empty TaskList is returned.
      * 
      * @return A TaskList containing all Tasks stored in the file.
-     * @throws DukeException
+     * @throws BobbyException
      */
-    public TaskList load() throws DukeException {
+    public TaskList load() throws BobbyException {
         if (!Files.exists(path)) {
             try {
                 Files.createFile(path);
             } catch (IOException ioe) {
-                throw new DukeException("Error: Could not create file :(");
+                throw new BobbyException("Error: Could not create file :(");
             }
         }
 
@@ -65,13 +65,13 @@ public class Storage {
                 } else if (command.equalsIgnoreCase("event")) {
                     runEventCommand(inputParts, taskList);
                 } else {
-                    throw new DukeException("Invalid command");
+                    throw new BobbyException("Invalid command");
                 }
             }
 
             return taskList;
         } catch (Exception e) {
-            throw new DukeException("Error: Could not load file :(");
+            throw new BobbyException("Error: Could not load file :(");
         }
     }
 
@@ -79,23 +79,23 @@ public class Storage {
      * Retrieves the Tasks in the given TaskList instance and saves them in the file.
      * 
      * @param taskList List of tasks.
-     * @throws DukeException
+     * @throws BobbyException
      */
-    public void save(TaskList taskList) throws DukeException {
+    public void save(TaskList taskList) throws BobbyException {
         try {
             List<String> lines = new ArrayList<>();
             taskList.getAllTasks().forEach(task -> lines.add(task.toCommand()));
             Files.write(path, lines);
         } catch (Exception e) {
-            throw new DukeException("Error: Could not save data to file :(");
+            throw new BobbyException("Error: Could not save data to file :(");
         }
     }
 
     private void runTodoCommand(HashMap<String, String> inputParts, TaskList taskList)
-            throws DukeException {
+            throws BobbyException {
         String description = inputParts.get("value");
         if (description == null || description.isEmpty()) {
-            throw new DukeException("The description of a todo cannot be empty!");
+            throw new BobbyException("The description of a todo cannot be empty!");
         }
 
         boolean isDone = inputParts.containsKey("done");
@@ -104,15 +104,15 @@ public class Storage {
     }
 
     private void runDeadlineCommand(HashMap<String, String> inputParts, TaskList taskList)
-            throws DukeException {
+            throws BobbyException {
         String description = inputParts.get("value");
         if (description == null || description.isEmpty()) {
-            throw new DukeException("The description of a deadline cannot be empty!");
+            throw new BobbyException("The description of a deadline cannot be empty!");
         }
 
         String by = inputParts.get("by");
         if (by == null || by.isEmpty()) {
-            throw new DukeException("I couldn't find the deadline!\n"
+            throw new BobbyException("I couldn't find the deadline!\n"
                     + "(Hint: Use the /by parameter)");
         }
 
@@ -121,7 +121,7 @@ public class Storage {
         try {
             byDate = LocalDate.parse(by);
         } catch (DateTimeParseException e) {
-            throw new DukeException("I don't understand this date format!\n"
+            throw new BobbyException("I don't understand this date format!\n"
                     + "(Hint: Use the yyyy-mm-dd format)");
         }
 
@@ -131,21 +131,21 @@ public class Storage {
     }
 
     private void runEventCommand(HashMap<String, String> inputParts, TaskList taskList)
-            throws DukeException {
+            throws BobbyException {
         String description = inputParts.get("value");
         if (description == null || description.isEmpty()) {
-            throw new DukeException("The description of an event cannot be empty!");
+            throw new BobbyException("The description of an event cannot be empty!");
         }
 
         String from = inputParts.get("from");
         if (from == null || from.isEmpty()) {
-            throw new DukeException("I couldn't find the start time!\n"
+            throw new BobbyException("I couldn't find the start time!\n"
                     + "(Hint: Use the /from parameter)");
         }
 
         String to = inputParts.get("to");
         if (to == null || to.isEmpty()) {
-            throw new DukeException("I couldn't find the end time!\n"
+            throw new BobbyException("I couldn't find the end time!\n"
                     + "(Hint: Use the /to parameter)");
         }
 
@@ -156,7 +156,7 @@ public class Storage {
             fromDate = LocalDate.parse(from);
             toDate = LocalDate.parse(to);
         } catch (Exception e) {
-            throw new DukeException("I don't understand this date format!\n"
+            throw new BobbyException("I don't understand this date format!\n"
                     + "(Hint: Use the yyyy-mm-dd format)");
         }
 

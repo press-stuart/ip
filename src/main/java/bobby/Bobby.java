@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 
-import bobby.exception.DukeException;
+import bobby.exception.BobbyException;
 import bobby.parser.Parser;
 import bobby.storage.Storage;
 import bobby.task.Deadline;
@@ -73,7 +73,7 @@ public class Bobby {
                 } else if (command.equalsIgnoreCase("event")) {
                     runEventCommand(inputParts);
                 } else {
-                    throw new DukeException("I don't know what that means :(\n"
+                    throw new BobbyException("I don't know what that means :(\n"
                             + "(Hint: Use one of the recognised commands)");
                 }
             } catch (Exception e) {
@@ -120,10 +120,10 @@ public class Bobby {
                 deletedTask.toString(), taskList.getSize()));
     }
 
-    private void runTodoCommand(HashMap<String, String> inputParts) throws DukeException {
+    private void runTodoCommand(HashMap<String, String> inputParts) throws BobbyException {
         String description = inputParts.get("value");
         if (description == null || description.isEmpty()) {
-            throw new DukeException("The description of a todo cannot be empty!");
+            throw new BobbyException("The description of a todo cannot be empty!");
         }
 
         boolean isDone = inputParts.containsKey("done");
@@ -134,15 +134,15 @@ public class Bobby {
                 todo.toString(), taskList.getSize()));
     }
 
-    private void runDeadlineCommand(HashMap<String, String> inputParts) throws DukeException {
+    private void runDeadlineCommand(HashMap<String, String> inputParts) throws BobbyException {
         String description = inputParts.get("value");
         if (description == null || description.isEmpty()) {
-            throw new DukeException("The description of a deadline cannot be empty!");
+            throw new BobbyException("The description of a deadline cannot be empty!");
         }
 
         String by = inputParts.get("by");
         if (by == null || by.isEmpty()) {
-            throw new DukeException("I couldn't find the deadline!\n"
+            throw new BobbyException("I couldn't find the deadline!\n"
                     + "(Hint: Use the /by parameter)");
         }
 
@@ -151,7 +151,7 @@ public class Bobby {
         try {
             byDate = LocalDate.parse(by);
         } catch (DateTimeParseException e) {
-            throw new DukeException("I don't understand this date format!\n"
+            throw new BobbyException("I don't understand this date format!\n"
                     + "(Hint: Use the yyyy-mm-dd format)");
         }
 
@@ -163,21 +163,21 @@ public class Bobby {
                 deadline.toString(), taskList.getSize()));
     }
 
-    private void runEventCommand(HashMap<String, String> inputParts) throws DukeException {
+    private void runEventCommand(HashMap<String, String> inputParts) throws BobbyException {
         String description = inputParts.get("value");
         if (description == null || description.isEmpty()) {
-            throw new DukeException("The description of an event cannot be empty!");
+            throw new BobbyException("The description of an event cannot be empty!");
         }
 
         String from = inputParts.get("from");
         if (from == null || from.isEmpty()) {
-            throw new DukeException("I couldn't find the start time!\n"
+            throw new BobbyException("I couldn't find the start time!\n"
                     + "(Hint: Use the /from parameter)");
         }
 
         String to = inputParts.get("to");
         if (to == null || to.isEmpty()) {
-            throw new DukeException("I couldn't find the end time!\n"
+            throw new BobbyException("I couldn't find the end time!\n"
                     + "(Hint: Use the /to parameter)");
         }
 
@@ -188,7 +188,7 @@ public class Bobby {
             fromDate = LocalDate.parse(from);
             toDate = LocalDate.parse(to);
         } catch (Exception e) {
-            throw new DukeException("I don't understand this date format!\n"
+            throw new BobbyException("I don't understand this date format!\n"
                     + "(Hint: Use the yyyy-mm-dd format)");
         }
 
