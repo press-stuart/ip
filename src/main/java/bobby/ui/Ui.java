@@ -56,11 +56,9 @@ public class Ui {
         String[] messageLines = message.split("\n");
 
         printStream.println(frameIndent + horizontalLine);
-
         for (String line : messageLines) {
             printStream.println(textIndent + line);
         }
-
         printStream.println(frameIndent + horizontalLine);
         printStream.println();
     }
