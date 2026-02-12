@@ -6,14 +6,14 @@ import java.time.format.DateTimeFormatter;
 /**
  * Represents an Event.
  */
-public class Event extends Task {
+public class EventTask extends Task {
     protected static final DateTimeFormatter PRINT_FORMAT = DateTimeFormatter.ofPattern("d MMM yyyy");
     protected static final DateTimeFormatter COMMAND_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     protected LocalDate from;
     protected LocalDate to;
     
-    public Event(String description, boolean isDone, LocalDate from, LocalDate to) {
+    public EventTask(String description, boolean isDone, LocalDate from, LocalDate to) {
         super(description, isDone);
         this.from = from;
         this.to = to;

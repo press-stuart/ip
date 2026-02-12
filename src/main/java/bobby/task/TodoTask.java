@@ -3,8 +3,8 @@ package bobby.task;
 /**
  * Represents a Todo.
  */
-public class Todo extends Task {
-    public Todo(String description, boolean isDone) {
+public class TodoTask extends Task {
+    public TodoTask(String description, boolean isDone) {
         super(description, isDone);
     }
 

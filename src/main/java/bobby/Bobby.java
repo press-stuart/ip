@@ -4,14 +4,16 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 
+import javafx.application.Platform;
+
 import bobby.exception.BobbyException;
 import bobby.parser.Parser;
 import bobby.storage.Storage;
-import bobby.task.Deadline;
-import bobby.task.Event;
+import bobby.task.DeadlineTask;
+import bobby.task.EventTask;
 import bobby.task.Task;
 import bobby.task.TaskList;
-import bobby.task.Todo;
+import bobby.task.TodoTask;
 import bobby.ui.Ui;
 
 /**
@@ -28,18 +30,19 @@ public class Bobby {
     /** User interface. */
     private Ui ui;
 
-    public static void main(String[] args) {
-        Bobby bobby = new Bobby();
-        bobby.runLoopUntilExit();
-        bobby.cleanUpAfterExit();
-    }
-
     /**
-     * Initializes Bobby, loading tasks from storage if available.
+     * Initializes Bobby.
      */
     public Bobby() {
         ui = new Ui();
         storage = new Storage();
+        loadTasks();
+    }
+
+    /**
+     * Loads tasks from storage, initializing an empty task list on failure.
+     */
+    public void loadTasks() {
         try {
             taskList = storage.load();
         } catch (Exception e) {
@@ -49,54 +52,58 @@ public class Bobby {
     }
 
     /**
-     * Reads and executes user commands until the exit command is found.
+     * Gets the introductory message displayed at startup.
      */
-    public void runLoopUntilExit() {
-        boolean isFinished = false;
+    public String getIntroMessage() {
+        return "Hello! I'm Bobby.\nWhat can I do for you?";
+    }
 
-        ui.printMessage("Hello! I'm Bobby.\nWhat can I do for you?");
+    /**
+     * Executes a user command and returns the response.
+     *
+     * @param input The user command input.
+     * @return The response after executing the command.
+     */
+    public String executeCommandAndGetResponse(String input) {
+        String response;
 
-        while (!isFinished) {
-            String inputLine = ui.readCommand();
+        try {
+            HashMap<String, String> inputParts = Parser.parse(input);
+            String command = inputParts.get("command");
 
-            try {
-                HashMap<String, String> inputParts = Parser.parse(inputLine);
-                String command = inputParts.get("command");
-
-                if (command.equalsIgnoreCase("bye")) {
-                    isFinished = true;
-                } else if (command.equalsIgnoreCase("list")) {
-                    runListCommand();
-                } else if (command.equalsIgnoreCase("mark")) {
-                    runMarkCommand(inputParts);
-                } else if (command.equalsIgnoreCase("unmark")) {
-                    runUnmarkCommand(inputParts);
-                } else if (command.equalsIgnoreCase("delete")) {
-                    runDeleteCommand(inputParts);
-                } else if (command.equalsIgnoreCase("todo")) {
-                    runTodoCommand(inputParts);
-                } else if (command.equalsIgnoreCase("deadline")) {
-                    runDeadlineCommand(inputParts);
-                } else if (command.equalsIgnoreCase("event")) {
-                    runEventCommand(inputParts);
-                } else if (command.equalsIgnoreCase("find")) {
-                    runFindCommand(inputParts);
-                } else {
-                    throw new BobbyException("I don't know what that means :(\n"
-                            + "(Hint: Use one of the recognised commands)");
-                }
-            } catch (Exception e) {
-                ui.printMessage(e.getMessage());
+            if (command.equalsIgnoreCase("bye")) {
+                response = runByeCommand();
+            } else if (command.equalsIgnoreCase("list")) {
+                response = runListCommand();
+            } else if (command.equalsIgnoreCase("mark")) {
+                response = runMarkCommand(inputParts);
+            } else if (command.equalsIgnoreCase("unmark")) {
+                response = runUnmarkCommand(inputParts);
+            } else if (command.equalsIgnoreCase("delete")) {
+                response = runDeleteCommand(inputParts);
+            } else if (command.equalsIgnoreCase("todo")) {
+                response = runTodoCommand(inputParts);
+            } else if (command.equalsIgnoreCase("deadline")) {
+                response = runDeadlineCommand(inputParts);
+            } else if (command.equalsIgnoreCase("event")) {
+                response = runEventCommand(inputParts);
+            } else if (command.equalsIgnoreCase("find")) {
+                response = runFindCommand(inputParts);
+            } else {
+                throw new BobbyException("I don't know what that means :(\n"
+                        + "(Hint: Use one of the recognised commands)");
             }
+        } catch (Exception e) {
+            response = e.getMessage();
         }
 
-        ui.printMessage("Bye! Hope to see you again soon!");
+        return response;
     }
 
     /**
      * Attempts to save tasks to storage and closes the UI.
      */
-    private void cleanUpAfterExit() {
+    public void cleanUpAfterExit() {
         try {
             storage.save(taskList);
         } catch (Exception e) {
@@ -106,47 +113,52 @@ public class Bobby {
         ui.close();
     }
 
-    private void runListCommand() {
-        ui.printMessage("Tasks in your list:\n" + taskList.toString());
+    private String runByeCommand() {
+        Platform.exit();
+        return "Bye! Hope to see you again soon!";
     }
 
-    private void runMarkCommand(HashMap<String, String> inputParts) {
+    private String runListCommand() {
+        return "Tasks in your list:\n" + taskList.toString();
+    }
+
+    private String runMarkCommand(HashMap<String, String> inputParts) {
         int taskIndex = Integer.valueOf(inputParts.get("value"));
         Task task = taskList.getTask(taskIndex);
         task.markDone();
-        ui.printMessage("Marked this task as done:\n  " + task);
+        return "Marked this task as done:\n  " + task;
     }
 
-    private void runUnmarkCommand(HashMap<String, String> inputParts) {
+    private String runUnmarkCommand(HashMap<String, String> inputParts) {
         int taskIndex = Integer.valueOf(inputParts.get("value"));
         Task task = taskList.getTask(taskIndex);
         task.unmarkDone();
-        ui.printMessage("Marked this task as not done:\n  " + task);
+        return "Marked this task as not done:\n  " + task;
     }
 
-    private void runDeleteCommand(HashMap<String, String> inputParts) {
+    private String runDeleteCommand(HashMap<String, String> inputParts) {
         int taskIndex = Integer.valueOf(inputParts.get("value"));
         Task deletedTask = taskList.deleteTask(taskIndex);
-        ui.printMessage(String.format(
+        return String.format(
                 "Deleted this task:\n  %s\nNow you have %d tasks in the list.",
-                deletedTask.toString(), taskList.getSize()));
+                deletedTask.toString(), taskList.getSize());
     }
 
-    private void runTodoCommand(HashMap<String, String> inputParts) throws BobbyException {
+    private String runTodoCommand(HashMap<String, String> inputParts) throws BobbyException {
         String description = inputParts.get("value");
         if (description == null || description.isEmpty()) {
             throw new BobbyException("The description of a todo cannot be empty!");
         }
 
         boolean isDone = inputParts.containsKey("done");
-        Todo todo = new Todo(description, isDone);
+        TodoTask todo = new TodoTask(description, isDone);
         taskList.addTask(todo);
-        ui.printMessage(String.format(
+        return String.format(
                 "Added this task:\n  %s\nNow you have %d tasks in the list.",
-                todo.toString(), taskList.getSize()));
+                todo.toString(), taskList.getSize());
     }
 
-    private void runDeadlineCommand(HashMap<String, String> inputParts) throws BobbyException {
+    private String runDeadlineCommand(HashMap<String, String> inputParts) throws BobbyException {
         String description = inputParts.get("value");
         if (description == null || description.isEmpty()) {
             throw new BobbyException("The description of a deadline cannot be empty!");
@@ -168,14 +180,14 @@ public class Bobby {
         }
 
         boolean isDone = inputParts.containsKey("done");
-        Deadline deadline = new Deadline(description, isDone, byDate);
+        DeadlineTask deadline = new DeadlineTask(description, isDone, byDate);
         taskList.addTask(deadline);
-        ui.printMessage(String.format(
+        return String.format(
                 "Added this task:\n  %s\nNow you have %d tasks in the list.",
-                deadline.toString(), taskList.getSize()));
+                deadline.toString(), taskList.getSize());
     }
 
-    private void runEventCommand(HashMap<String, String> inputParts) throws BobbyException {
+    private String runEventCommand(HashMap<String, String> inputParts) throws BobbyException {
         String description = inputParts.get("value");
         if (description == null || description.isEmpty()) {
             throw new BobbyException("The description of an event cannot be empty!");
@@ -205,20 +217,20 @@ public class Bobby {
         }
 
         boolean isDone = inputParts.containsKey("done");
-        Event event = new Event(description, isDone, fromDate, toDate);
+        EventTask event = new EventTask(description, isDone, fromDate, toDate);
         taskList.addTask(event);
-        ui.printMessage(String.format(
+        return String.format(
                 "Added this task:\n  %s\nNow you have %d tasks in the list.",
-                event.toString(), taskList.getSize()));
+                event.toString(), taskList.getSize());
     }
 
-    private void runFindCommand(HashMap<String, String> inputParts) throws BobbyException {
+    private String runFindCommand(HashMap<String, String> inputParts) throws BobbyException {
         String keyword = inputParts.get("value");
         if (keyword == null || keyword.isEmpty()) {
             throw new BobbyException("The keyword for finding tasks cannot be empty!");
         }
 
         TaskList foundTasks = taskList.findTasks(keyword);
-        ui.printMessage("Here are the matching tasks in your list:\n" + foundTasks.toString());
+        return "Here are the matching tasks in your list:\n" + foundTasks.toString();
     }
 }
