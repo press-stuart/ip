@@ -15,10 +15,10 @@ import java.util.List;
 
 import bobby.exception.BobbyException;
 import bobby.parser.Parser;
-import bobby.task.Deadline;
-import bobby.task.Event;
+import bobby.task.DeadlineTask;
+import bobby.task.EventTask;
 import bobby.task.TaskList;
-import bobby.task.Todo;
+import bobby.task.TodoTask;
 
 /**
  * Manager for the file storing the list of tasks.
@@ -99,7 +99,7 @@ public class Storage {
         }
 
         boolean isDone = inputParts.containsKey("done");
-        Todo todo = new Todo(description, isDone);
+        TodoTask todo = new TodoTask(description, isDone);
         taskList.addTask(todo);
     }
 
@@ -126,7 +126,7 @@ public class Storage {
         }
 
         boolean isDone = inputParts.containsKey("done");
-        Deadline deadline = new Deadline(description, isDone, byDate);
+        DeadlineTask deadline = new DeadlineTask(description, isDone, byDate);
         taskList.addTask(deadline);
     }
 
@@ -161,7 +161,7 @@ public class Storage {
         }
 
         boolean isDone = inputParts.containsKey("done");
-        Event event = new Event(description, isDone, fromDate, toDate);
+        EventTask event = new EventTask(description, isDone, fromDate, toDate);
         taskList.addTask(event);
     }
 }

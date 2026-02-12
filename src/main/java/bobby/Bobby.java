@@ -7,11 +7,11 @@ import java.util.HashMap;
 import bobby.exception.BobbyException;
 import bobby.parser.Parser;
 import bobby.storage.Storage;
-import bobby.task.Deadline;
-import bobby.task.Event;
+import bobby.task.DeadlineTask;
+import bobby.task.EventTask;
 import bobby.task.Task;
 import bobby.task.TaskList;
-import bobby.task.Todo;
+import bobby.task.TodoTask;
 import bobby.ui.Ui;
 
 /**
@@ -139,7 +139,7 @@ public class Bobby {
         }
 
         boolean isDone = inputParts.containsKey("done");
-        Todo todo = new Todo(description, isDone);
+        TodoTask todo = new TodoTask(description, isDone);
         taskList.addTask(todo);
         ui.printMessage(String.format(
                 "Added this task:\n  %s\nNow you have %d tasks in the list.",
@@ -168,7 +168,7 @@ public class Bobby {
         }
 
         boolean isDone = inputParts.containsKey("done");
-        Deadline deadline = new Deadline(description, isDone, byDate);
+        DeadlineTask deadline = new DeadlineTask(description, isDone, byDate);
         taskList.addTask(deadline);
         ui.printMessage(String.format(
                 "Added this task:\n  %s\nNow you have %d tasks in the list.",
@@ -205,7 +205,7 @@ public class Bobby {
         }
 
         boolean isDone = inputParts.containsKey("done");
-        Event event = new Event(description, isDone, fromDate, toDate);
+        EventTask event = new EventTask(description, isDone, fromDate, toDate);
         taskList.addTask(event);
         ui.printMessage(String.format(
                 "Added this task:\n  %s\nNow you have %d tasks in the list.",
