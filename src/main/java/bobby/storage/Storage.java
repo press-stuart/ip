@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import bobby.commands.Command;
 import bobby.exception.BobbyException;
 import bobby.parser.Message;
 import bobby.parser.Parser;
@@ -54,20 +55,10 @@ public class Storage {
         try {
             TaskList taskList = new TaskList();
             List<String> lines = Files.readAllLines(path);
-            
-            for (String line : lines) {
-                HashMap<String, String> inputParts = Parser.parse(line);
-                String command = inputParts.get("command");
 
-                if (command.equalsIgnoreCase("todo")) {
-                    runTodoCommand(inputParts, taskList);
-                } else if (command.equalsIgnoreCase("deadline")) {
-                    runDeadlineCommand(inputParts, taskList);
-                } else if (command.equalsIgnoreCase("event")) {
-                    runEventCommand(inputParts, taskList);
-                } else {
-                    throw new BobbyException(Message.MESSAGE_INVALID_COMMAND);
-                }
+            for (String line : lines) {
+                Command command = Parser.parse(line);
+                command.execute(taskList);
             }
 
             return taskList;
@@ -90,74 +81,5 @@ public class Storage {
         } catch (Exception e) {
             throw new BobbyException(Message.MESSAGE_STORAGE_FILE_SAVE_ERROR);
         }
-    }
-
-    private void runTodoCommand(HashMap<String, String> inputParts, TaskList taskList)
-            throws BobbyException {
-        String description = inputParts.get("value");
-        if (description == null || description.isEmpty()) {
-            throw new BobbyException(Message.MESSAGE_TODO_EMPTY_DESCRIPTION);
-        }
-
-        boolean isDone = inputParts.containsKey("done");
-        TodoTask todo = new TodoTask(description, isDone);
-        taskList.addTask(todo);
-    }
-
-    private void runDeadlineCommand(HashMap<String, String> inputParts, TaskList taskList)
-            throws BobbyException {
-        String description = inputParts.get("value");
-        if (description == null || description.isEmpty()) {
-            throw new BobbyException(Message.MESSAGE_DEADLINE_EMPTY_DESCRIPTION);
-        }
-
-        String by = inputParts.get("by");
-        if (by == null || by.isEmpty()) {
-            throw new BobbyException(Message.MESSAGE_DEADLINE_MISSING_BY);
-        }
-
-        LocalDate byDate;
-
-        try {
-            byDate = LocalDate.parse(by);
-        } catch (DateTimeParseException e) {
-            throw new BobbyException(Message.MESSAGE_INVALID_DATE_FORMAT);
-        }
-
-        boolean isDone = inputParts.containsKey("done");
-        DeadlineTask deadline = new DeadlineTask(description, isDone, byDate);
-        taskList.addTask(deadline);
-    }
-
-    private void runEventCommand(HashMap<String, String> inputParts, TaskList taskList)
-            throws BobbyException {
-        String description = inputParts.get("value");
-        if (description == null || description.isEmpty()) {
-            throw new BobbyException(Message.MESSAGE_EVENT_EMPTY_DESCRIPTION);
-        }
-
-        String from = inputParts.get("from");
-        if (from == null || from.isEmpty()) {
-            throw new BobbyException(Message.MESSAGE_EVENT_MISSING_FROM);
-        }
-
-        String to = inputParts.get("to");
-        if (to == null || to.isEmpty()) {
-            throw new BobbyException(Message.MESSAGE_EVENT_MISSING_TO);
-        }
-
-        LocalDate fromDate;
-        LocalDate toDate;
-
-        try {
-            fromDate = LocalDate.parse(from);
-            toDate = LocalDate.parse(to);
-        } catch (Exception e) {
-            throw new BobbyException(Message.MESSAGE_INVALID_DATE_FORMAT);
-        }
-
-        boolean isDone = inputParts.containsKey("done");
-        EventTask event = new EventTask(description, isDone, fromDate, toDate);
-        taskList.addTask(event);
     }
 }
