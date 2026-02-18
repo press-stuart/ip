@@ -50,6 +50,8 @@ public class Storage {
             }
         }
 
+        assert Files.exists(path) : "File should exist after creation";
+
         try {
             TaskList taskList = new TaskList();
             List<String> lines = Files.readAllLines(path);

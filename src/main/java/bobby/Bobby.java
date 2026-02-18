@@ -97,6 +97,7 @@ public class Bobby {
             response = e.getMessage();
         }
 
+        assert response != null : "Response should not be null";
         return response;
     }
 
