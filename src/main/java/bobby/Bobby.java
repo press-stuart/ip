@@ -5,7 +5,6 @@ import bobby.parser.Message;
 import bobby.parser.Parser;
 import bobby.storage.Storage;
 import bobby.task.TaskList;
-import bobby.ui.Ui;
 
 /**
  * Main class for Bobby the chatbot. Drives the initialization, user command loop
@@ -18,14 +17,10 @@ public class Bobby {
     /** Manager for the file storing the list of tasks. */
     private Storage storage;
 
-    /** User interface. */
-    private Ui ui;
-
     /**
      * Initializes Bobby.
      */
     public Bobby() {
-        ui = new Ui();
         storage = new Storage();
     }
 
@@ -80,11 +75,9 @@ public class Bobby {
         try {
             storage.save(taskList);
         } catch (Exception e) {
-            ui.printMessage(e.getMessage());
             return e.getMessage();
         }
-        
-        ui.close();
+
         return null;
     }
 }
