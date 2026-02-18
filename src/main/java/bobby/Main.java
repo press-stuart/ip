@@ -27,7 +27,9 @@ public class Main extends Application {
             MainWindow controller = fxmlLoader.getController();
             controller.setBobby(bobby); // inject the Bobby instance
             stage.show();
-            controller.showIntroMessage();
+
+            String introMessage = bobby.getIntroMessage();
+            controller.displayMessageFromBobby(introMessage);
         } catch (IOException e) {
             e.printStackTrace();
         }

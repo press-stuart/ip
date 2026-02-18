@@ -40,11 +40,14 @@ public class MainWindow extends AnchorPane {
         bobby = b;
     }
 
-    /** Displays the introductory message from Bobby. */
-    public void showIntroMessage() {
-        String introMessage = bobby.getIntroMessage();
+    /**
+     * Creates a dialog box that shows a message from Bobby.
+     *
+     * @param message String to be displayed in the dialog box.
+     */
+    public void displayMessageFromBobby(String message) {
         dialogContainer.getChildren().addAll(
-                DialogBox.getBobbyDialog(introMessage, bobbyImage)
+                DialogBox.getBobbyDialog(message, bobbyImage)
         );
     }
 
