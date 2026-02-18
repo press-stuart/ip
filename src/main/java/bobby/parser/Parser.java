@@ -25,8 +25,7 @@ public class Parser {
         HashMap<String, String> components = new HashMap<>();
 
         if (line == null || line.isBlank()) {
-            throw new BobbyException("Did you say something?\n"
-                    + "(Hint: Input cannot be blank)");
+            throw new BobbyException(Message.MESSAGE_EMPTY_INPUT);
         }
 
         // Split by one or more whitespace characters followed by '/'
@@ -36,8 +35,7 @@ public class Parser {
         String[] commandValueTokens = commandValueSection.split("\\s+", 2);
 
         if (commandValueTokens.length == 0) {
-            throw new BobbyException("I don't know what that means :(\n"
-                    + "(Hint: Use one of the recognised commands)");
+            throw new BobbyException(Message.MESSAGE_INVALID_COMMAND);
         }
 
         String command = commandValueTokens[0];
@@ -52,8 +50,7 @@ public class Parser {
             String[] parts = parameterSection.split("\\s+", 2);
 
             if (parts.length == 0 || parts[0].isBlank()) {
-                throw new BobbyException("I couldn't find a parameter name :(\n"
-                        + "(Hint: Don't leave a space after the '/')");
+                throw new BobbyException(Message.MESSAGE_EMPTY_PARAMETER_NAME);
             }
 
             String parameterName = parts[0];

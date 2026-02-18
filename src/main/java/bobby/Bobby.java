@@ -7,6 +7,7 @@ import java.util.HashMap;
 import javafx.application.Platform;
 
 import bobby.exception.BobbyException;
+import bobby.parser.Message;
 import bobby.parser.Parser;
 import bobby.storage.Storage;
 import bobby.task.DeadlineTask;
@@ -55,7 +56,7 @@ public class Bobby {
      * Gets the introductory message displayed at startup.
      */
     public String getIntroMessage() {
-        return "Hello! I'm Bobby.\nWhat can I do for you?";
+        return Message.MESSAGE_INTRO;
     }
 
     /**
@@ -90,8 +91,7 @@ public class Bobby {
             } else if (command.equalsIgnoreCase("find")) {
                 response = runFindCommand(inputParts);
             } else {
-                throw new BobbyException("I don't know what that means :(\n"
-                        + "(Hint: Use one of the recognised commands)");
+                throw new BobbyException(Message.MESSAGE_INVALID_COMMAND);
             }
         } catch (Exception e) {
             response = e.getMessage();
@@ -115,59 +115,56 @@ public class Bobby {
 
     private String runByeCommand() {
         Platform.exit();
-        return "Bye! Hope to see you again soon!";
+        return Message.MESSAGE_EXIT;
     }
 
     private String runListCommand() {
-        return "Tasks in your list:\n" + taskList.toString();
+        return String.format(Message.MESSAGE_LIST_FORMAT, taskList);
     }
 
     private String runMarkCommand(HashMap<String, String> inputParts) {
         int taskIndex = Integer.valueOf(inputParts.get("value"));
         Task task = taskList.getTask(taskIndex);
         task.markDone();
-        return "Marked this task as done:\n  " + task;
+        return String.format(Message.MESSAGE_MARK_FORMAT, task);
     }
 
     private String runUnmarkCommand(HashMap<String, String> inputParts) {
         int taskIndex = Integer.valueOf(inputParts.get("value"));
         Task task = taskList.getTask(taskIndex);
         task.unmarkDone();
-        return "Marked this task as not done:\n  " + task;
+        return String.format(Message.MESSAGE_UNMARK_FORMAT, task);
     }
 
     private String runDeleteCommand(HashMap<String, String> inputParts) {
         int taskIndex = Integer.valueOf(inputParts.get("value"));
         Task deletedTask = taskList.deleteTask(taskIndex);
         return String.format(
-                "Deleted this task:\n  %s\nNow you have %d tasks in the list.",
+                Message.MESSAGE_DELETE_FORMAT,
                 deletedTask.toString(), taskList.getSize());
     }
 
     private String runTodoCommand(HashMap<String, String> inputParts) throws BobbyException {
         String description = inputParts.get("value");
         if (description == null || description.isEmpty()) {
-            throw new BobbyException("The description of a todo cannot be empty!");
+            throw new BobbyException(Message.MESSAGE_TODO_EMPTY_DESCRIPTION);
         }
 
         boolean isDone = inputParts.containsKey("done");
         TodoTask todo = new TodoTask(description, isDone);
         taskList.addTask(todo);
-        return String.format(
-                "Added this task:\n  %s\nNow you have %d tasks in the list.",
-                todo.toString(), taskList.getSize());
+        return String.format(Message.MESSAGE_ADD_FORMAT, todo, taskList.getSize());
     }
 
     private String runDeadlineCommand(HashMap<String, String> inputParts) throws BobbyException {
         String description = inputParts.get("value");
         if (description == null || description.isEmpty()) {
-            throw new BobbyException("The description of a deadline cannot be empty!");
+            throw new BobbyException(Message.MESSAGE_DEADLINE_EMPTY_DESCRIPTION);
         }
 
         String by = inputParts.get("by");
         if (by == null || by.isEmpty()) {
-            throw new BobbyException("I couldn't find the deadline!\n"
-                    + "(Hint: Use the /by parameter)");
+            throw new BobbyException(Message.MESSAGE_DEADLINE_MISSING_BY);
         }
 
         LocalDate byDate;
@@ -175,34 +172,29 @@ public class Bobby {
         try {
             byDate = LocalDate.parse(by);
         } catch (DateTimeParseException e) {
-            throw new BobbyException("I don't understand this date format!\n"
-                    + "(Hint: Use the yyyy-mm-dd format)");
+            throw new BobbyException(Message.MESSAGE_INVALID_DATE_FORMAT);
         }
 
         boolean isDone = inputParts.containsKey("done");
         DeadlineTask deadline = new DeadlineTask(description, isDone, byDate);
         taskList.addTask(deadline);
-        return String.format(
-                "Added this task:\n  %s\nNow you have %d tasks in the list.",
-                deadline.toString(), taskList.getSize());
+        return String.format(Message.MESSAGE_ADD_FORMAT, deadline, taskList.getSize());
     }
 
     private String runEventCommand(HashMap<String, String> inputParts) throws BobbyException {
         String description = inputParts.get("value");
         if (description == null || description.isEmpty()) {
-            throw new BobbyException("The description of an event cannot be empty!");
+            throw new BobbyException(Message.MESSAGE_EVENT_EMPTY_DESCRIPTION);
         }
 
         String from = inputParts.get("from");
         if (from == null || from.isEmpty()) {
-            throw new BobbyException("I couldn't find the start time!\n"
-                    + "(Hint: Use the /from parameter)");
+            throw new BobbyException(Message.MESSAGE_EVENT_MISSING_FROM);
         }
 
         String to = inputParts.get("to");
         if (to == null || to.isEmpty()) {
-            throw new BobbyException("I couldn't find the end time!\n"
-                    + "(Hint: Use the /to parameter)");
+            throw new BobbyException(Message.MESSAGE_EVENT_MISSING_TO);
         }
 
         LocalDate fromDate;
@@ -212,25 +204,22 @@ public class Bobby {
             fromDate = LocalDate.parse(from);
             toDate = LocalDate.parse(to);
         } catch (Exception e) {
-            throw new BobbyException("I don't understand this date format!\n"
-                    + "(Hint: Use the yyyy-mm-dd format)");
+            throw new BobbyException(Message.MESSAGE_INVALID_DATE_FORMAT);
         }
 
         boolean isDone = inputParts.containsKey("done");
         EventTask event = new EventTask(description, isDone, fromDate, toDate);
         taskList.addTask(event);
-        return String.format(
-                "Added this task:\n  %s\nNow you have %d tasks in the list.",
-                event.toString(), taskList.getSize());
+        return String.format(Message.MESSAGE_ADD_FORMAT, event, taskList.getSize());
     }
 
     private String runFindCommand(HashMap<String, String> inputParts) throws BobbyException {
         String keyword = inputParts.get("value");
         if (keyword == null || keyword.isEmpty()) {
-            throw new BobbyException("The keyword for finding tasks cannot be empty!");
+            throw new BobbyException(Message.MESSAGE_FIND_EMPTY_KEYWORD);
         }
 
         TaskList foundTasks = taskList.findTasks(keyword);
-        return "Here are the matching tasks in your list:\n" + foundTasks.toString();
+        return String.format(Message.MESSAGE_FIND_FORMAT, foundTasks);
     }
 }
