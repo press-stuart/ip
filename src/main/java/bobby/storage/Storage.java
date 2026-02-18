@@ -6,21 +6,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import bobby.commands.Command;
 import bobby.exception.BobbyException;
 import bobby.parser.Message;
 import bobby.parser.Parser;
-import bobby.task.DeadlineTask;
-import bobby.task.EventTask;
 import bobby.task.TaskList;
-import bobby.task.TodoTask;
 
 /**
  * Manager for the file storing the list of tasks.
