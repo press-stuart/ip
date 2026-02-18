@@ -32,14 +32,18 @@ public class Bobby {
 
     /**
      * Loads tasks from storage, initializing an empty task list on failure.
+     *
+     * @return A message indicating the result of the loading process, or null if loading was successful.
      */
-    public void loadTasks() {
+    public String loadTasks() {
         try {
             taskList = storage.load();
         } catch (Exception e) {
-            ui.printMessage(e.getMessage());
             taskList = new TaskList();
+            return e.getMessage();
         }
+
+        return null;
     }
 
     /**
