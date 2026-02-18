@@ -73,14 +73,18 @@ public class Bobby {
 
     /**
      * Attempts to save tasks to storage and closes the UI.
+     *
+     * @return A message indicating the result of the saving process, or null if saving was successful.
      */
-    public void cleanUpAfterExit() {
+    public String cleanUpAfterExit() {
         try {
             storage.save(taskList);
         } catch (Exception e) {
             ui.printMessage(e.getMessage());
+            return e.getMessage();
         }
         
         ui.close();
+        return null;
     }
 }
