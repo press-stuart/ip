@@ -19,10 +19,6 @@ public class TodoCommand extends Command {
 
     @Override
     protected String performAction(TaskList taskList) throws BobbyException {
-        if (description == null || description.isEmpty()) {
-            throw new BobbyException(Message.MESSAGE_TODO_EMPTY_DESCRIPTION);
-        }
-
         TodoTask todo = new TodoTask(description, isDone);
         taskList.addTask(todo);
         return String.format(Message.MESSAGE_ADD_FORMAT, todo, taskList.getSize());
