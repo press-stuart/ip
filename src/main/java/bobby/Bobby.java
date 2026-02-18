@@ -27,7 +27,6 @@ public class Bobby {
     public Bobby() {
         ui = new Ui();
         storage = new Storage();
-        loadTasks();
     }
 
     /**

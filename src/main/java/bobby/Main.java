@@ -30,6 +30,11 @@ public class Main extends Application {
 
             String introMessage = bobby.getIntroMessage();
             controller.displayMessageFromBobby(introMessage);
+
+            String loadErrorMessage = bobby.loadTasks();
+            if (loadErrorMessage != null) {
+                controller.displayMessageFromBobby(loadErrorMessage);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
