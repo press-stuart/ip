@@ -2,7 +2,6 @@ package bobby.parser;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
-import java.util.HashMap;
 
 import bobby.commands.ByeCommand;
 import bobby.commands.Command;
@@ -30,7 +29,11 @@ public class Parser {
      * parameter name is missing.
      */
     public static Command parse(String line) throws BobbyException {
-        HashMap<String, String> components = splitIntoComponents(line);
+        if (line == null || line.isBlank()) {
+            throw new BobbyException(Message.MESSAGE_EMPTY_INPUT);
+        }
+
+        InputComponents components = splitIntoComponents(line);
         return createCommandFromComponents(components);
     }
 
@@ -44,53 +47,43 @@ public class Parser {
      * the first word is the parameter name. All remaining text forms the parameter value.
      * 
      * @param line String containing a line of user input.
-     * @return A HashMap with keys "command", "value" and parameter names
+     * @return An InputComponents object containing the extracted command, value and parameters.
      * @throws BobbyException If the input is blank (whitespace only), the command cannot be
      * found, or a parameter name is missing.
      */
-    private static HashMap<String, String> splitIntoComponents(String line) throws BobbyException {
-        HashMap<String, String> components = new HashMap<>();
-
-        if (line == null || line.isBlank()) {
-            throw new BobbyException(Message.MESSAGE_EMPTY_INPUT);
-        }
+    private static InputComponents splitIntoComponents(String line) throws BobbyException {
+        InputComponents components = new InputComponents();
 
         // Split by one or more whitespace characters followed by '/'
         String[] sections = line.split("\\s+/");
 
+        // First section contains command and value
         String commandValueSection = sections[0];
         String[] commandValueTokens = commandValueSection.split("\\s+", 2);
-
         if (commandValueTokens.length == 0) {
             throw new BobbyException(Message.MESSAGE_INVALID_COMMAND);
         }
-
-        String command = commandValueTokens[0];
-        components.put("command", command);
-
-        String value = commandValueTokens.length < 2 ? "" : commandValueTokens[1];
-        components.put("value", value);
+        components.setCommandType(commandValueTokens[0]);
+        components.setValue(commandValueTokens.length < 2 ? "" : commandValueTokens[1]);
 
         // Process additional parameters
         for (int i = 1; i < sections.length; i++) {
             String parameterSection = sections[i];
             String[] parts = parameterSection.split("\\s+", 2);
-
             if (parts.length == 0 || parts[0].isBlank()) {
                 throw new BobbyException(Message.MESSAGE_EMPTY_PARAMETER_NAME);
             }
-
             String parameterName = parts[0];
             String parameterValue = parts.length < 2 ? "" : parts[1];
-            components.put(parameterName, parameterValue);
+            components.addParameter(parameterName, parameterValue);
         }
 
         return components;
     }
 
-    private static Command createCommandFromComponents(HashMap<String, String> components)
+    private static Command createCommandFromComponents(InputComponents components)
             throws BobbyException {
-        String commandType = components.get("command").toLowerCase();
+        String commandType = components.getCommandType().toLowerCase();
         return switch (commandType) {
             case "bye" -> createByeCommand();
             case "deadline" -> createDeadlineCommand(components);
@@ -109,16 +102,16 @@ public class Parser {
         return new ByeCommand();
     }
 
-    private static DeadlineCommand createDeadlineCommand(HashMap<String, String> components)
+    private static DeadlineCommand createDeadlineCommand(InputComponents components)
             throws BobbyException {
-        String description = components.get("value");
+        String description = components.getValue();
         if (description == null || description.isBlank()) {
             throw new BobbyException(Message.MESSAGE_DEADLINE_EMPTY_DESCRIPTION);
         }
 
-        boolean isDone = components.containsKey("done");
+        boolean isDone = components.containsParameter("done");
 
-        String by = components.get("by");
+        String by = components.getParameter("by");
         if (by == null || by.isBlank()) {
             throw new BobbyException(Message.MESSAGE_DEADLINE_MISSING_BY);
         }
@@ -127,9 +120,9 @@ public class Parser {
         return new DeadlineCommand(description, isDone, byDate);
     }
 
-    private static DeleteCommand createDeleteCommand(HashMap<String, String> components)
+    private static DeleteCommand createDeleteCommand(InputComponents components)
             throws BobbyException {
-        String indexString = components.get("value");
+        String indexString = components.getValue();
         int index;
         try {
             index = Integer.parseInt(indexString);
@@ -139,22 +132,22 @@ public class Parser {
         return new DeleteCommand(index);
     }
 
-    private static EventCommand createEventCommand(HashMap<String, String> components)
+    private static EventCommand createEventCommand(InputComponents components)
             throws BobbyException {
-        String description = components.get("value");
+        String description = components.getValue();
         if (description == null || description.isBlank()) {
             throw new BobbyException(Message.MESSAGE_EVENT_EMPTY_DESCRIPTION);
         }
 
-        boolean isDone = components.containsKey("done");
+        boolean isDone = components.containsParameter("done");
 
-        String from = components.get("from");
+        String from = components.getParameter("from");
         if (from == null || from.isBlank()) {
             throw new BobbyException(Message.MESSAGE_EVENT_MISSING_FROM);
         }
         LocalDate fromDate = parseDate(from);
 
-        String to = components.get("to");
+        String to = components.getParameter("to");
         if (to == null || to.isBlank()) {
             throw new BobbyException(Message.MESSAGE_EVENT_MISSING_TO);
         }
@@ -163,9 +156,9 @@ public class Parser {
         return new EventCommand(description, isDone, fromDate, toDate);
     }
 
-    private static FindCommand createFindCommand(HashMap<String, String> components)
+    private static FindCommand createFindCommand(InputComponents components)
             throws BobbyException {
-        String keyword = components.get("value");
+        String keyword = components.getValue();
         if (keyword == null || keyword.isBlank()) {
             throw new BobbyException(Message.MESSAGE_FIND_EMPTY_KEYWORD);
         }
@@ -176,9 +169,9 @@ public class Parser {
         return new ListCommand();
     }
 
-    private static MarkCommand createMarkCommand(HashMap<String, String> components)
+    private static MarkCommand createMarkCommand(InputComponents components)
             throws BobbyException {
-        String indexString = components.get("value");
+        String indexString = components.getValue();
         int index;
         try {
             index = Integer.parseInt(indexString);
@@ -188,20 +181,20 @@ public class Parser {
         return new MarkCommand(index);
     }
 
-    private static TodoCommand createTodoCommand(HashMap<String, String> components)
+    private static TodoCommand createTodoCommand(InputComponents components)
             throws BobbyException {
-        String description = components.get("value");
+        String description = components.getValue();
         if (description == null || description.isBlank()) {
             throw new BobbyException(Message.MESSAGE_TODO_EMPTY_DESCRIPTION);
         }
 
-        boolean isDone = components.containsKey("done");
+        boolean isDone = components.containsParameter("done");
         return new TodoCommand(description, isDone);
     }
 
-    private static UnmarkCommand createUnmarkCommand(HashMap<String, String> components)
+    private static UnmarkCommand createUnmarkCommand(InputComponents components)
             throws BobbyException {
-        String indexString = components.get("value");
+        String indexString = components.getValue();
         int index;
         try {
             index = Integer.parseInt(indexString);
