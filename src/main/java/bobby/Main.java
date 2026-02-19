@@ -14,7 +14,7 @@ import bobby.ui.MainWindow;
  * A GUI for Bobby using FXML.
  */
 public class Main extends Application {
-
+    private MainWindow controller;
     private Bobby bobby = new Bobby();
 
     @Override
@@ -24,10 +24,17 @@ public class Main extends Application {
             AnchorPane ap = fxmlLoader.load();
             Scene scene = new Scene(ap);
             stage.setScene(scene);
-            MainWindow controller = fxmlLoader.getController();
+            controller = fxmlLoader.getController();
             controller.setBobby(bobby); // inject the Bobby instance
             stage.show();
-            controller.showIntroMessage();
+
+            String introMessage = bobby.getIntroMessage();
+            controller.displayMessageFromBobby(introMessage);
+
+            String loadErrorMessage = bobby.loadTasks();
+            if (loadErrorMessage != null) {
+                controller.displayMessageFromBobby(loadErrorMessage);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -35,6 +42,9 @@ public class Main extends Application {
 
     @Override
     public void stop() {
-        bobby.cleanUpAfterExit();
+        String cleanUpErrorMessage = bobby.cleanUpAfterExit();
+        if (cleanUpErrorMessage != null) {
+            controller.displayMessageFromBobby(cleanUpErrorMessage);
+        }
     }
 }
