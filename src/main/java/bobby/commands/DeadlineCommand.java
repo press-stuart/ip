@@ -14,6 +14,13 @@ public class DeadlineCommand extends Command {
     private final boolean isDone;
     private final LocalDate byDate;
 
+    /**
+     * Creates a DeadlineCommand with the given description, completion status, and deadline date.
+     *
+     * @param description Description of the Deadline task.
+     * @param isDone Completion status of the Deadline task.
+     * @param byDate Deadline date of the Deadline task.
+     */
     public DeadlineCommand(String description, boolean isDone, LocalDate byDate) {
         this.description = description;
         this.isDone = isDone;

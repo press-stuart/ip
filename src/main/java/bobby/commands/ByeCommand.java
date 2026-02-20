@@ -1,9 +1,8 @@
 package bobby.commands;
 
-import javafx.application.Platform;
-
 import bobby.parser.Message;
 import bobby.task.TaskList;
+import javafx.application.Platform;
 
 /**
  * Represents the command to exit the program and initiate clean-up.

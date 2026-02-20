@@ -10,6 +10,11 @@ import bobby.task.TaskList;
 public class MarkCommand extends Command {
     private final int taskIndex;
 
+    /**
+     * Creates a MarkCommand to mark the task at the specified index as done.
+     *
+     * @param index Index of the task to be marked as done (1-based indexing).
+     */
     public MarkCommand(int index) {
         this.taskIndex = index;
     }

@@ -26,7 +26,7 @@ public class Parser {
      * @param line String containing a line of user input.
      * @return A Command object representing the parsed input.
      * @throws BobbyException If the input is blank, the command is not recognized, or a
-     * parameter name is missing.
+     *     parameter name is missing.
      */
     public static Command parse(String line) throws BobbyException {
         if (line == null || line.isBlank()) {
@@ -45,11 +45,11 @@ public class Parser {
      * exist.
      * Forward slashes `/` define the beginnings of parameters. After removing the forward slash,
      * the first word is the parameter name. All remaining text forms the parameter value.
-     * 
+     *
      * @param line String containing a line of user input.
      * @return An InputComponents object containing the extracted command, value and parameters.
      * @throws BobbyException If the input is blank (whitespace only), the command cannot be
-     * found, or a parameter name is missing.
+     *     found, or a parameter name is missing.
      */
     private static InputComponents splitIntoComponents(String line) throws BobbyException {
         InputComponents components = new InputComponents();
@@ -84,6 +84,8 @@ public class Parser {
     private static Command createCommandFromComponents(InputComponents components)
             throws BobbyException {
         String commandType = components.getCommandType().toLowerCase();
+
+        //CHECKSTYLE.OFF: Indentation
         return switch (commandType) {
             case "bye" -> createByeCommand();
             case "deadline" -> createDeadlineCommand(components);
@@ -96,6 +98,7 @@ public class Parser {
             case "unmark" -> createUnmarkCommand(components);
             default -> throw new BobbyException(Message.MESSAGE_INVALID_COMMAND);
         };
+        //CHECKSTYLE.ON: Indentation
     }
 
     private static ByeCommand createByeCommand() {

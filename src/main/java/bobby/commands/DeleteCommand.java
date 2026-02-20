@@ -10,6 +10,11 @@ import bobby.task.TaskList;
 public class DeleteCommand extends Command {
     private final int taskIndex;
 
+    /**
+     * Creates a DeleteCommand with the index of the task to be deleted.
+     *
+     * @param index Index of the task to be deleted (1-based indexing).
+     */
     public DeleteCommand(int index) {
         this.taskIndex = index;
     }

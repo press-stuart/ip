@@ -10,6 +10,11 @@ import bobby.task.TaskList;
 public class UnmarkCommand extends Command {
     private final int taskIndex;
 
+    /**
+     * Creates an UnmarkCommand to mark the task at the specified index as not done.
+     *
+     * @param index Index of the task to be marked as not done (1-based indexing).
+     */
     public UnmarkCommand(int index) {
         this.taskIndex = index;
     }
