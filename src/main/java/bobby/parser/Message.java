@@ -39,6 +39,12 @@ public class Message {
             I couldn't find the deadline! :(
             (Hint: Use the /by parameter)""";
 
+    public static final String MESSAGE_DOAFTER_EMPTY_DESCRIPTION = """
+            The description of a do-after task cannot be empty! :(""";
+    public static final String MESSAGE_DOAFTER_MISSING_AFTER = """
+            I couldn't find the date after which the task should be done! :(
+            (Hint: Use the /after parameter)""";
+
     public static final String MESSAGE_EVENT_EMPTY_DESCRIPTION = """
             The description of an event cannot be empty! :(""";
     public static final String MESSAGE_EVENT_MISSING_FROM = """
