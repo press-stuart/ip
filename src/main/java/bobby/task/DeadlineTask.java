@@ -1,7 +1,7 @@
 package bobby.task;
 
-import java.time.format.DateTimeFormatter;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Represents a Deadline.
@@ -9,9 +9,15 @@ import java.time.LocalDate;
 public class DeadlineTask extends Task {
     protected static final DateTimeFormatter PRINT_FORMAT = DateTimeFormatter.ofPattern("d MMM yyyy");
     protected static final DateTimeFormatter COMMAND_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    
     protected LocalDate by;
 
+    /**
+     * Constructs a DeadlineTask.
+     *
+     * @param description Description of the DeadlineTask.
+     * @param isDone Completion status of the DeadlineTask.
+     * @param by Deadline date of the DeadlineTask.
+     */
     public DeadlineTask(String description, boolean isDone, LocalDate by) {
         super(description, isDone);
         this.by = by;

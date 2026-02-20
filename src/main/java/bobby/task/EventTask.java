@@ -1,7 +1,7 @@
 package bobby.task;
 
-import java.time.format.DateTimeFormatter;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Represents an Event.
@@ -9,10 +9,17 @@ import java.time.LocalDate;
 public class EventTask extends Task {
     protected static final DateTimeFormatter PRINT_FORMAT = DateTimeFormatter.ofPattern("d MMM yyyy");
     protected static final DateTimeFormatter COMMAND_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
     protected LocalDate from;
     protected LocalDate to;
-    
+
+    /**
+     * Constructs an EventTask.
+     *
+     * @param description Description of the EventTask.
+     * @param isDone Completion status of the EventTask.
+     * @param from Start date of the EventTask.
+     * @param to End date of the EventTask.
+     */
     public EventTask(String description, boolean isDone, LocalDate from, LocalDate to) {
         super(description, isDone);
         this.from = from;

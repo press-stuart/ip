@@ -7,6 +7,12 @@ public abstract class Task {
     protected String description;
     protected boolean isDone;
 
+    /**
+     * Constructs a Task.
+     *
+     * @param description Description of the Task.
+     * @param isDone Completion status of the Task.
+     */
     public Task(String description, boolean isDone) {
         this.description = description;
         this.isDone = isDone;

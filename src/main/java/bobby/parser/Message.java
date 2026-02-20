@@ -1,5 +1,8 @@
 package bobby.parser;
 
+/**
+ * Container for all messages used by the program.
+ */
 public class Message {
     public static final String MESSAGE_INTRO = """
             Hello! I'm Bobby.

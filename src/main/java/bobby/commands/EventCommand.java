@@ -15,6 +15,14 @@ public class EventCommand extends Command {
     private final LocalDate fromDate;
     private final LocalDate toDate;
 
+    /**
+     * Creates an EventCommand with the given description, completion status, and event dates.
+     *
+     * @param description Description of the event task.
+     * @param isDone Completion status of the event task.
+     * @param fromDate Start date of the event.
+     * @param toDate End date of the event.
+     */
     public EventCommand(String description, boolean isDone, LocalDate fromDate, LocalDate toDate) {
         this.description = description;
         this.isDone = isDone;

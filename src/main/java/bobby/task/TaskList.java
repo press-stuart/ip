@@ -25,7 +25,7 @@ public class TaskList {
 
     /**
      * Deletes the task at the given index from the list.
-     * 
+     *
      * @param index Index of the task, with numbering beginning from 1.
      * @return The task that is deleted.
      */
@@ -53,7 +53,7 @@ public class TaskList {
 
     /**
      * Gets the task at the given index from the list.
-     * 
+     *
      * @param index Index of the task, with numbering beginning from 1.
      * @return The task at the given index.
      */
@@ -70,7 +70,7 @@ public class TaskList {
 
     /**
      * Gets the number of tasks in the list.
-     * 
+     *
      * @return The number of tasks in the list.
      */
     public int getSize() {
