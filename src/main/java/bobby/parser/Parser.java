@@ -7,6 +7,7 @@ import bobby.commands.ByeCommand;
 import bobby.commands.Command;
 import bobby.commands.DeadlineCommand;
 import bobby.commands.DeleteCommand;
+import bobby.commands.DoAfterCommand;
 import bobby.commands.EventCommand;
 import bobby.commands.FindCommand;
 import bobby.commands.ListCommand;
@@ -90,6 +91,7 @@ public class Parser {
             case "bye" -> createByeCommand();
             case "deadline" -> createDeadlineCommand(components);
             case "delete" -> createDeleteCommand(components);
+            case "doafter" -> createDoAfterCommand(components);
             case "event" -> createEventCommand(components);
             case "find" -> createFindCommand(components);
             case "list" -> createListCommand();
@@ -133,6 +135,24 @@ public class Parser {
             throw new BobbyException(Message.MESSAGE_INVALID_TASK_INDEX);
         }
         return new DeleteCommand(index);
+    }
+
+    private static DoAfterCommand createDoAfterCommand(InputComponents components)
+            throws BobbyException {
+        String description = components.getValue();
+        if (description == null || description.isBlank()) {
+            throw new BobbyException(Message.MESSAGE_DOAFTER_EMPTY_DESCRIPTION);
+        }
+
+        boolean isDone = components.containsParameter("done");
+
+        String after = components.getParameter("after");
+        if (after == null || after.isBlank()) {
+            throw new BobbyException(Message.MESSAGE_DOAFTER_MISSING_AFTER);
+        }
+        LocalDate afterDate = parseDate(after);
+
+        return new DoAfterCommand(description, isDone, afterDate);
     }
 
     private static EventCommand createEventCommand(InputComponents components)
