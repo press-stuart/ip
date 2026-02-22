@@ -1,5 +1,6 @@
 package bobby.commands;
 
+import bobby.exception.BobbyException;
 import bobby.parser.Message;
 import bobby.task.Task;
 import bobby.task.TaskList;
@@ -20,7 +21,7 @@ public class MarkCommand extends Command {
     }
 
     @Override
-    protected String performAction(TaskList taskList) {
+    protected String performAction(TaskList taskList) throws BobbyException {
         Task task = taskList.getTask(taskIndex);
         task.markDone();
         return String.format(Message.MESSAGE_MARK_FORMAT, task);

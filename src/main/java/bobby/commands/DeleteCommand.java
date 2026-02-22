@@ -1,5 +1,6 @@
 package bobby.commands;
 
+import bobby.exception.BobbyException;
 import bobby.parser.Message;
 import bobby.task.Task;
 import bobby.task.TaskList;
@@ -20,7 +21,7 @@ public class DeleteCommand extends Command {
     }
 
     @Override
-    protected String performAction(TaskList taskList) {
+    protected String performAction(TaskList taskList) throws BobbyException {
         Task deletedTask = taskList.deleteTask(taskIndex);
         return String.format(
                 Message.MESSAGE_DELETE_FORMAT,

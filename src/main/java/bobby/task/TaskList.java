@@ -3,6 +3,9 @@ package bobby.task;
 import java.util.ArrayList;
 import java.util.List;
 
+import bobby.exception.BobbyException;
+import bobby.parser.Message;
+
 /**
  * A container of user tasks.
  */
@@ -28,8 +31,10 @@ public class TaskList {
      *
      * @param index Index of the task, with numbering beginning from 1.
      * @return The task that is deleted.
+     * @throws BobbyException If the index is out of range.
      */
-    public Task deleteTask(int index) {
+    public Task deleteTask(int index) throws BobbyException {
+        throwExceptionIfIndexOutOfRange(index);
         return tasks.remove(index - 1);
     }
 
@@ -56,8 +61,10 @@ public class TaskList {
      *
      * @param index Index of the task, with numbering beginning from 1.
      * @return The task at the given index.
+     * @throws BobbyException If the index is out of range.
      */
-    public Task getTask(int index) {
+    public Task getTask(int index) throws BobbyException {
+        throwExceptionIfIndexOutOfRange(index);
         return tasks.get(index - 1);
     }
 
@@ -95,5 +102,11 @@ public class TaskList {
         }
 
         return sb.toString();
+    }
+
+    private void throwExceptionIfIndexOutOfRange(int index) throws BobbyException {
+        if (index < 1 || index > getSize()) {
+            throw new BobbyException(String.format(Message.MESSAGE_INVALID_TASK_INDEX));
+        }
     }
 }
