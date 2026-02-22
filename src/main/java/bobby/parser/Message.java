@@ -59,6 +59,8 @@ public class Message {
     public static final String MESSAGE_FIND_FORMAT = """
             Here are the matching tasks in your list:
             %1$s""";
+    public static final String MESSAGE_FIND_NO_MATCH = """
+            You don't have any matching tasks!""";
     public static final String MESSAGE_FIND_EMPTY_KEYWORD = """
             The keyword for finding tasks cannot be empty! :(""";
 
