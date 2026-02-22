@@ -13,21 +13,30 @@ public class Message {
     public static final String MESSAGE_LIST_FORMAT = """
             Here are the tasks in your list:
             %1$s""";
+    public static final String MESSAGE_LIST_EMPTY = """
+            You don't have any tasks!""";
 
     public static final String MESSAGE_MARK_FORMAT = """
             Marked this task as done:
-              %1$s""";
+            %1$s""";
+    public static final String MESSAGE_MARK_ALREADY_MARKED_FORMAT = """
+            This task is already marked as done:
+            %1$s""";
+
     public static final String MESSAGE_UNMARK_FORMAT = """
             Marked this task as not done:
-              %1$s""";
+            %1$s""";
+    public static final String MESSAGE_UNMARK_ALREADY_UNMARKED_FORMAT = """
+            This task is already marked as not done:
+            %1$s""";
 
     public static final String MESSAGE_ADD_FORMAT = """
             Added this task:
-              %1$s
+            %1$s
             Now you have %2$d task(s) in the list.""";
     public static final String MESSAGE_DELETE_FORMAT = """
             Deleted this task:
-              %1$s
+            %1$s
             Now you have %2$d task(s) in the list.""";
 
     public static final String MESSAGE_TODO_EMPTY_DESCRIPTION = """
@@ -57,6 +66,8 @@ public class Message {
     public static final String MESSAGE_FIND_FORMAT = """
             Here are the matching tasks in your list:
             %1$s""";
+    public static final String MESSAGE_FIND_NO_MATCH = """
+            You don't have any matching tasks!""";
     public static final String MESSAGE_FIND_EMPTY_KEYWORD = """
             The keyword for finding tasks cannot be empty! :(""";
 

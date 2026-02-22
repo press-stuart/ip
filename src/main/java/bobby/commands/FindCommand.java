@@ -21,6 +21,9 @@ public class FindCommand extends Command {
     @Override
     protected String performAction(TaskList taskList) {
         TaskList foundTasks = taskList.findTasks(keyword);
+        if (foundTasks.isEmpty()) {
+            return Message.MESSAGE_FIND_NO_MATCH;
+        }
         return String.format(Message.MESSAGE_FIND_FORMAT, foundTasks);
     }
 }

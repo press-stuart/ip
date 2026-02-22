@@ -76,6 +76,15 @@ public class TaskList {
     }
 
     /**
+     * Checks if the list is empty.
+     *
+     * @return True if the list is empty, false otherwise.
+     */
+    public boolean isEmpty() {
+        return tasks.isEmpty();
+    }
+
+    /**
      * Gets the number of tasks in the list.
      *
      * @return The number of tasks in the list.
@@ -97,7 +106,7 @@ public class TaskList {
             }
 
             Task task = this.tasks.get(i);
-            String line = String.format("%d.%s", i + 1, task.toString());
+            String line = String.format("%d. %s", i + 1, task.toString());
             sb.append(line);
         }
 
