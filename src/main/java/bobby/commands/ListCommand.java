@@ -9,6 +9,9 @@ import bobby.task.TaskList;
 public class ListCommand extends Command {
     @Override
     protected String performAction(TaskList taskList) {
+        if (taskList.isEmpty()) {
+            return Message.MESSAGE_LIST_EMPTY;
+        }
         return String.format(Message.MESSAGE_LIST_FORMAT, taskList);
     }
 }

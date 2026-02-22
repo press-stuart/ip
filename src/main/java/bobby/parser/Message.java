@@ -13,6 +13,8 @@ public class Message {
     public static final String MESSAGE_LIST_FORMAT = """
             Here are the tasks in your list:
             %1$s""";
+    public static final String MESSAGE_LIST_EMPTY = """
+            You don't have any tasks!""";
 
     public static final String MESSAGE_MARK_FORMAT = """
             Marked this task as done:
