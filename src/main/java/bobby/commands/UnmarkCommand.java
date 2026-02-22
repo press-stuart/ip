@@ -23,6 +23,9 @@ public class UnmarkCommand extends Command {
     @Override
     protected String performAction(TaskList taskList) throws BobbyException {
         Task task = taskList.getTask(taskIndex);
+        if (!task.isDone()) {
+            return String.format(Message.MESSAGE_UNMARK_ALREADY_UNMARKED_FORMAT, task);
+        }
         task.unmarkDone();
         return String.format(Message.MESSAGE_UNMARK_FORMAT, task);
     }

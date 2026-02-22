@@ -26,6 +26,9 @@ public class Message {
     public static final String MESSAGE_UNMARK_FORMAT = """
             Marked this task as not done:
               %1$s""";
+    public static final String MESSAGE_UNMARK_ALREADY_UNMARKED_FORMAT = """
+            This task is already marked as not done:
+              %1$s""";
 
     public static final String MESSAGE_ADD_FORMAT = """
             Added this task:
