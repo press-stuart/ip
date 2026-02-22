@@ -42,9 +42,9 @@ Added this task:
 Now you have 1 task(s) in the list.
 ```
 
-> [!TIP]
-> You can add a 'todo' task that is already done by including the optional `/done` parameter: `todo Read book /done`.
-> If you wish to edit the locally stored data file directly, you can append `/done` to the end of a task entry to mark it as done. Refer to [Editing the data file](#editing-the-data-file).
+**Tip:** You can add a 'todo' task that is already done by including the optional `/done` parameter: `todo Read book /done`.
+
+If you wish to edit the locally stored data file directly, you can append `/done` to the end of a task entry to mark it as done. Refer to [Editing the data file](#editing-the-data-file).
 
 ## Adding 'deadline' tasks
 
@@ -123,8 +123,7 @@ Marked this task as done:
 [D][X] Submit report (by: 30 Jun 2026)
 ```
 
-> [!TIP]
-> Use the `list` command to find the task number of the task you want to mark as done.
+**Tip:** Use the `list` command to find the task number of the task you want to mark as done.
 
 ## Unmarking tasks
 
@@ -186,5 +185,4 @@ Users can directly edit the `tasks.txt` file to modify their tasks.
 
 Each task is described on its own line, using the same format as the command used to create it.
 
-> [!CAUTION]
-> If the format of the data file is incorrect after editing, Bobby the bot will discard the data file and start with an empty task list upon launch. It is recommended to make a backup of the data file before making any edits.
+**CAUTION:** If the format of the data file is incorrect after editing, Bobby the bot will discard the data file and start with an empty task list upon launch. It is recommended to make a backup of the data file before making any edits.
