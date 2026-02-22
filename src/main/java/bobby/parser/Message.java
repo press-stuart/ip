@@ -19,6 +19,10 @@ public class Message {
     public static final String MESSAGE_MARK_FORMAT = """
             Marked this task as done:
               %1$s""";
+    public static final String MESSAGE_MARK_ALREADY_MARKED_FORMAT = """
+            This task is already marked as done:
+              %1$s""";
+
     public static final String MESSAGE_UNMARK_FORMAT = """
             Marked this task as not done:
               %1$s""";

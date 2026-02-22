@@ -23,6 +23,9 @@ public class MarkCommand extends Command {
     @Override
     protected String performAction(TaskList taskList) throws BobbyException {
         Task task = taskList.getTask(taskIndex);
+        if (task.isDone()) {
+            return String.format(Message.MESSAGE_MARK_ALREADY_MARKED_FORMAT, task);
+        }
         task.markDone();
         return String.format(Message.MESSAGE_MARK_FORMAT, task);
     }

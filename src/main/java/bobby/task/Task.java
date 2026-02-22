@@ -41,6 +41,15 @@ public abstract class Task {
     }
 
     /**
+     * Checks if the task is done.
+     *
+     * @return True if the task is done, false otherwise.
+     */
+    public boolean isDone() {
+        return isDone;
+    }
+
+    /**
      * Returns the task's status icon depending on whether the task is done.
      */
     public String getStatusIcon() {
