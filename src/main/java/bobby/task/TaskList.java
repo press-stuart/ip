@@ -45,10 +45,12 @@ public class TaskList {
      * @return A TaskList containing all found tasks.
      */
     public TaskList findTasks(String keyword) {
+        String lowercaseKeyword = keyword.toLowerCase();
         TaskList foundTasks = new TaskList();
 
         for (Task task : tasks) {
-            if (task.getDescription().contains(keyword)) {
+            String lowercaseDescription = task.getDescription().toLowerCase();
+            if (lowercaseDescription.contains(lowercaseKeyword)) {
                 foundTasks.addTask(task);
             }
         }
